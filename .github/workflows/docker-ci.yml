@@ -19,7 +19,7 @@ jobs:
   spawner-base-melodic:
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
     with:
-      docker_file: melodic/Dockerfile
+      docker_file: docker/melodic/Dockerfile
       docker_image: registry.cloud.mov.ai/devops/spawner-base-melodic
       github_ref: ${{ github.ref }}
     secrets:
@@ -28,7 +28,7 @@ jobs:
   spawner-base-noetic:
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
     with:
-      docker_file: noetic/Dockerfile
+      docker_file: docker/noetic/Dockerfile
       docker_image: registry.cloud.mov.ai/devops/spawner-base-noetic
       github_ref: ${{ github.ref }}
     secrets:
