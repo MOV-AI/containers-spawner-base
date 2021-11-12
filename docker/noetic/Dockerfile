@@ -106,7 +106,7 @@ RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg 
     dpkg --unpack movai-spawner*.deb && \
     rm /var/lib/dpkg/info/movai-spawner.postinst -f && \
     dpkg --configure movai-spawner && \
-    apt-get install -yf --no-install-recommends #To fix dependencies && \
+    apt-get install -yf --no-install-recommends && \
     apt-get clean -y > /dev/null && \
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/*
@@ -139,7 +139,7 @@ RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg 
     dpkg --unpack movai-spawner*.deb && \
     rm /var/lib/dpkg/info/movai-spawner.postinst -f && \
     dpkg --configure movai-spawner && \
-    apt-get install -yf --no-install-recommends #To fix dependencies && \
+    apt-get install -yf --no-install-recommends && \
     apt-get clean -y > /dev/null && \
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/*
