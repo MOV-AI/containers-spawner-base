@@ -54,11 +54,16 @@ COPY scripts/base/backup.sh /usr/local/bin/backup.sh
 COPY scripts/base/ros1-workspace-build.sh /usr/local/bin/ros1-workspace-build.sh
 COPY scripts/base/ros1-workspace-package.sh /usr/local/bin/ros1-workspace-package.sh
 COPY scripts/base/enable-custom-rosdep.sh /usr/local/bin/enable-custom-rosdep.sh
+COPY scripts/base/setup-pypi-env.bash /usr/local/bin/setup-pypi-env.bash
+COPY scripts/base/resources/ /usr/local/share/pypi-confs/resources
 COPY scripts/base/provision.sh /usr/local/bin/provision.sh
 
 # enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
 # hadolint ignore=DL3004
-RUN /usr/local/bin/enable-custom-rosdep.sh PROD && \
+RUN /usr/local/bin/setup-pypi-env.bash PROD && \
+    chown movai /etc/pip.conf && \
+    python3 -m pip install mobros && \
+    /usr/local/bin/enable-custom-rosdep.sh PROD && \
     # Install required packages
     /usr/local/bin/install-packages.sh && \
     # Clean and make sure python3 is the only installed one
