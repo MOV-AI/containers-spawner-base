@@ -22,3 +22,5 @@ debhelper
 build-essential 
 devscripts
 fakeroot
+# noetic spawner warning
+python3-debian
