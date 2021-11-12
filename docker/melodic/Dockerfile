@@ -85,6 +85,7 @@ COPY scripts/develop/movai-entrypoint.sh /usr/local/bin/movai-entrypoint.sh
 # Run everything as mov.ai user
 USER movai
 
+
 # === QA ===
 FROM builder-develop AS builder-qa
 LABEL environment="qa"
