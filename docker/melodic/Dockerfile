@@ -55,7 +55,9 @@ COPY scripts/base/ros1-workspace-build.sh /usr/local/bin/ros1-workspace-build.sh
 COPY scripts/base/ros1-workspace-package.sh /usr/local/bin/ros1-workspace-package.sh
 COPY scripts/base/enable-custom-rosdep.sh /usr/local/bin/enable-custom-rosdep.sh
 COPY scripts/base/provision.sh /usr/local/bin/provision.sh
+
 # enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
+# hadolint ignore=DL3004
 RUN /usr/local/bin/enable-custom-rosdep.sh PROD && \
     # Install required packages
     /usr/local/bin/install-packages.sh && \
@@ -92,6 +94,8 @@ USER root
 COPY scripts/$MOVAI_ENV/movai-entrypoint.sh /usr/local/bin/movai-entrypoint.sh
 
 # Deploy application code inside the container
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# hadolint ignore=DL3008
 RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
     add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-$MOVAI_PPA $MOVAI_PPA main" && \
     apt-get update > /dev/null && \
@@ -115,8 +119,8 @@ USER root
 
 # Copy entrypoint script
 COPY scripts/$MOVAI_ENV/movai-entrypoint.sh /usr/local/bin/movai-entrypoint.sh
-
-
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# hadolint ignore=DL3008
 RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
     add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-$MOVAI_PPA $MOVAI_PPA main" && \
     apt-get update > /dev/null && \
