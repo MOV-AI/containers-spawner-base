@@ -70,7 +70,7 @@ COPY --chown=movai:movai scripts/base/movai.bash ${MOVAI_HOME}/movai.bash
 COPY --chown=movai:movai sdk/ ${MOVAI_HOME}/sdk/
 
 # Copy runtime scripts
-COPY scripts/develop/movai-entrypoint.sh /usr/local/bin/movai-entrypoint.sh
+COPY scripts/base/movai-entrypoint.sh /usr/local/bin/movai-entrypoint.sh
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
