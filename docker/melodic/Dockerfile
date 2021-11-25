@@ -1,20 +1,15 @@
-# === builder-develop
+# === builder
 ARG DOCKER_REGISTRY="registry.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/devops/movai-base-melodic:v1.0.1 AS builder-develop
-
-# Arguments
-ARG MOVAI_ENV="develop"
-ARG MOVAI_BRANCH="develop"
-ARG MOVAI_PPA="testing"
+FROM ${DOCKER_REGISTRY}/devops/movai-base-melodic:v1.0.1 AS builder
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
 LABEL maintainer="devops@mov.ai"
 LABEL movai="spawner"
-LABEL environment="$MOVAI_ENV"
+LABEL environment="release"
 
 ### Environment config
-ENV MOVAI_ENV="$MOVAI_BRANCH" \
+ENV MOVAI_ENV="release" \
     MOVAI_USERSPACE="${MOVAI_HOME}/user" \
     APP_NAME="spawner" \
     REDIS_MASTER_HOST="redis-master" \
@@ -77,59 +72,15 @@ COPY --chown=movai:movai sdk/ ${MOVAI_HOME}/sdk/
 # Copy runtime scripts
 COPY scripts/develop/movai-entrypoint.sh /usr/local/bin/movai-entrypoint.sh
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# hadolint ignore=DL3008
+RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
+    add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-main main main" && \
+    apt-get update > /dev/null && \
+    apt-get -y --no-install-recommends install movai-spawner && \
+    apt-get clean -y > /dev/null && \
+    rm -rf /var/cache/apt/* && \
+    rm -rf /var/lib/apt/lists/*
+
 # Run everything as mov.ai user
 USER movai
-
-# === QA ===
-FROM builder-develop AS builder-qa
-LABEL environment="qa"
-
-### Environment config
-ENV MOVAI_ENV="qa" \
-    MOVAI_PPA="testing"
-
-USER root
-
-# Copy entrypoint script
-COPY scripts/$MOVAI_ENV/movai-entrypoint.sh /usr/local/bin/movai-entrypoint.sh
-
-# Deploy application code inside the container
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-# hadolint ignore=DL3008
-RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
-    add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-$MOVAI_PPA $MOVAI_PPA main" && \
-    apt-get update > /dev/null && \
-    apt-get -y --no-install-recommends install movai-spawner && \
-    apt-get clean -y > /dev/null && \
-    rm -rf /var/cache/apt/* && \
-    rm -rf /var/lib/apt/lists/*
-
-
-USER movai
-RUN python3 -m pip install --user --no-cache-dir -r /opt/mov.ai/app/requirements.txt
-
-#=== Release ===
-FROM builder-develop AS builder-release
-LABEL environment="prod"
-
-ENV MOVAI_ENV="release" \
-    MOVAI_PPA="main"
-
-USER root
-
-# Copy entrypoint script
-COPY scripts/$MOVAI_ENV/movai-entrypoint.sh /usr/local/bin/movai-entrypoint.sh
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-# hadolint ignore=DL3008
-RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
-    add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-$MOVAI_PPA $MOVAI_PPA main" && \
-    apt-get update > /dev/null && \
-    apt-get -y --no-install-recommends install movai-spawner && \
-    apt-get clean -y > /dev/null && \
-    rm -rf /var/cache/apt/* && \
-    rm -rf /var/lib/apt/lists/*
-
-# The application will run as movai
-USER movai
-
-RUN python3 -m pip install --user --no-cache-dir -r /opt/mov.ai/app/requirements.txt
