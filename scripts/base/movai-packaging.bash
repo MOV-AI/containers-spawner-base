@@ -193,7 +193,8 @@ function movai_install_bash_scripts() {
 
     local PACKAGES_LOCATION=${1}
     printf "[Installing bash] Start\n"
-    for PACKAGE in ${PACKAGES_LOCATION}/*.bash; do
+    find "${PACKAGES_LOCATION}" -maxdepth 1 -type f -name "*.bash" -print0 | while read -d $'\0' PACKAGE
+    do
 
         local PACKAGE_NAME="$(basename ${PACKAGE})"
 
@@ -236,7 +237,8 @@ function movai_install_yaml_scripts() {
 
     local PACKAGES_LOCATION=${1}
     printf "[Installing yaml] Start\n"
-    for PACKAGE in "${PACKAGES_LOCATION}"/*.yml; do
+    find "${PACKAGES_LOCATION}" -maxdepth 1 -type f -name "*.yml" -print0 | while read -d $'\0' PACKAGE
+    do
 
         local PACKAGE_NAME="$(basename ${PACKAGE})"
         eval $(parse_yaml ${PACKAGES_LOCATION}/${PACKAGE_NAME%%.*}.yml "PACKAGE_CONF_")
@@ -318,7 +320,8 @@ function movai_install_rosinstall() {
         fi
     fi
 
-    for PACKAGE in ${PACKAGES_LOCATION}/*.rosinstall; do
+    find "${PACKAGES_LOCATION}" -maxdepth 1 -type f -name "*.rosinstall" -print0 | while read -d $'\0' PACKAGE
+    do
 
         local CURR_CHECKSUM=$(md5sum ${PACKAGE} | awk '{ print $1 }')
 
