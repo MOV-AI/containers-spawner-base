@@ -23,6 +23,9 @@ else
 fi
 
 # Update ppa and spawner package
+for ppa_env in dev testing main; do
+    sudo add-apt-repository -r "deb https://artifacts.cloud.mov.ai/repository/ppa-${ppa_env} ${ppa_env} main"
+done || true
 sudo add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-$MOVAI_PPA $MOVAI_PPA main"
 sudo apt-get update > /dev/null
 sudo apt-get -y --no-install-recommends install movai-spawner --reinstall
