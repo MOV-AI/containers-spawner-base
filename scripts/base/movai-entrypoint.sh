@@ -27,11 +27,11 @@ for ppa_env in dev testing main; do
     sudo add-apt-repository -r "deb https://artifacts.cloud.mov.ai/repository/ppa-${ppa_env} ${ppa_env} main"
 done || true
 # isnt this repeated with the previous iteration ?
-#sudo add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-$MOVAI_PPA $MOVAI_PPA main"
+sudo add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-$MOVAI_PPA $MOVAI_PPA main"
 
 # movai-spawner installing itself constantly is questionable 
 # and its causing conflicts with movai-service commands on spawner to do apt related operations
-#sudo apt-get -y --no-install-recommends install movai-spawner --reinstall
+sudo apt-get -y --no-install-recommends install movai-spawner --reinstall
 #sudo apt-get clean -y > /dev/null
 
 export PATH=${MOVAI_HOME}/.local/bin:${PATH}
