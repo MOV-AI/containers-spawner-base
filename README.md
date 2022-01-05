@@ -6,8 +6,13 @@ This is the SPAWNER docker project
 
 Melodic version :
 
-    docker build --pull -t spawner-melodic -f docker/melodic/develop/Dockerfile .
+    docker build --pull -t spawner-melodic -f docker/melodic/Dockerfile .
 
 Noetic version :
 
-    docker build --pull -t spawner-noetic -f docker/noetic/develop/Dockerfile .
+    docker build --pull -t spawner-noetic -f docker/noetic/Dockerfile .
+
+## Features
+
+- Initialization of ROS workspaces
+
