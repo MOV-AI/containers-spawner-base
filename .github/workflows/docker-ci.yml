@@ -40,6 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_PUSH: ${{ contains(inputs.github_ref, 'refs/heads/main') || contains(inputs.github_ref, 'refs/tags/v')}}
+      DOCKER_REGISTRY: registry.cloud.mov.ai
     if: ${{ env.DOCKER_PUSH }}
     steps:
       - name: Login to Movai Registry
@@ -47,13 +48,12 @@ jobs:
         with:
           username: ${{ secrets.PORTUS_APP_USER }}
           password: ${{ secrets.PORTUS_APP_TOKEN }}
-          registry: registry.cloud.mov.ai
+          registry: ${{ env.DOCKER_REGISTRY }}
       - name: "Verify push and tag vars from env"
         id: get_version
         env:
           GITHUB_REF: ${{ inputs.github_ref }}
           DOCKER_PUSH: ${{ env.DOCKER_PUSH }}
-          DOCKER_REGISTRY: registry.cloud.mov.ai
         run: |
           echo $GITHUB_REF
           echo $DOCKER_PUSH
@@ -70,8 +70,9 @@ jobs:
         run: |
           images="spawner-base-melodic spawner-base-noetic"
           for img in $images; do
-            docker tag "${DOCKER_REGISTRY}/devops/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}" "${DOCKER_REGISTRY}/develop/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
-            docker tag "${DOCKER_REGISTRY}/devops/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}" "${DOCKER_REGISTRY}/qa/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
-            docker push "${DOCKER_REGISTRY}/develop/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
-            docker push "${DOCKER_REGISTRY}/qa/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
+            docker pull "${{ env.DOCKER_REGISTRY }}/devops/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
+            docker tag "${{ env.DOCKER_REGISTRY }}/devops/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}" "${{ env.DOCKER_REGISTRY }}/develop/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
+            docker tag "${{ env.DOCKER_REGISTRY }}/devops/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}" "${{ env.DOCKER_REGISTRY }}/qa/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
+            docker push "${{ env.DOCKER_REGISTRY }}/develop/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
+            docker push "${{ env.DOCKER_REGISTRY }}/qa/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
           done
