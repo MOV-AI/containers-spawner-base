@@ -39,9 +39,9 @@ jobs:
     needs: [spawner-base-melodic, spawner-base-noetic]
     runs-on: ubuntu-latest
     env:
-      DOCKER_PUSH: ${{ contains(inputs.github_ref, 'refs/heads/main') || contains(inputs.github_ref, 'refs/tags/v')}}
+      DOCKER_PUSH: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v')}}
       DOCKER_REGISTRY: registry.cloud.mov.ai
-    if: ${{ contains(inputs.github_ref, 'refs/heads/main') || contains(inputs.github_ref, 'refs/tags/v')}}
+    if: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v')}}
     steps:
       - name: Login to Movai Registry
         uses: docker/login-action@v1
@@ -52,7 +52,7 @@ jobs:
       - name: "Verify push and tag vars from env"
         id: get_version
         env:
-          GITHUB_REF: ${{ inputs.github_ref }}
+          GITHUB_REF: ${{ github.ref }}
           DOCKER_PUSH: ${{ env.DOCKER_PUSH }}
         run: |
           echo $GITHUB_REF
