@@ -182,7 +182,7 @@ function movai_install_pip() {
 
         if [ "${PACKAGE_CHECKSUM}" != "${CURR_CHECKSUM}" ]; then
             printf "[Installing pip] Installing PIP packages from ${PACKAGES_LOCATION}/requirements.txt\n"
-            python3 -m pip install -r ${PACKAGES_LOCATION}/requirements.txt
+            python3 -m pip install --no-cache-dir -r ${PACKAGES_LOCATION}/requirements.txt
         fi
         printf "[Installing pip] End\n"
         printf "%s\n" "-----------------------"
