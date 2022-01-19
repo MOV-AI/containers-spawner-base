@@ -1,2 +1,16 @@
 # This file is intended for users who want to build MOVAI from source.
 # Used with wstool, users can download source of all packages of MOVAI.
+# This file is intended for users who want to build MoveIt from source.
+# Used with wstool, users can download source of all packages of MoveIt.
+- git:
+    local-name: geometry
+    uri: https://github.com/ros/geometry
+    version: melodic-devel
+- git:
+    local-name: geometry2
+    uri: https://github.com/ros/geometry2
+    version: melodic-devel
+- git:
+    local-name: cv_bridge
+    uri: https://github.com/ros-perception/vision_opencv.git
+    version: melodic    
