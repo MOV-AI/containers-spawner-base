@@ -40,7 +40,15 @@ if [ -z "$CMAKE_ARGS" ]; then
 fi
 
 BUILD_LIMITS="${BUILD_LIMITS:--j2 -l2 --mem-limit 50%}"
-BUILD_ARGS="${BUILD_LIMITS} -DPYTHON_VERSION=${PYTHON_VERSION:-3.6}"
+
+# We will now build the user ROS1 workspace
+if [ "${ROS_DISTRO}" = "melodic" ]; then
+    BUILD_ARGS="${BUILD_LIMITS} -DPYTHON_VERSION=2.7.17"
+elif  [ "${ROS_DISTRO}" = "noetic" ]; then
+    BUILD_ARGS="${BUILD_LIMITS} -DPYTHON_VERSION=3.8"
+else
+    BUILD_ARGS="${BUILD_LIMITS}"
+fi
 
 printf "Configuring ROS1 Workspace with args:\n"
 printf "\t env: %s\n" "${MOVAI_ENV}"
