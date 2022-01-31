@@ -47,15 +47,13 @@ class Sdk(object):
         self._socket = None
         self.ctx = None
         self.socket_add = socket_add
-        self.init_port()
 
     def init_port(self):
-        if self.ctx is None:
-            self.ctx = zmq.Context()
-            self._socket = self.ctx.socket(zmq.REQ)
-            self._socket.setsockopt(zmq.IDENTITY, "sdk_req".encode('utf8'))
-            self._socket.setsockopt(zmq.RCVTIMEO, int(MOVAI_ZMQ_TIMEOUT_MS))
-            self._socket.connect(self.socket_add)
+        self.ctx = zmq.Context()
+        self._socket = self.ctx.socket(zmq.REQ)
+        self._socket.setsockopt(zmq.IDENTITY, "sdk_req".encode('utf8'))
+        self._socket.setsockopt(zmq.RCVTIMEO, int(MOVAI_ZMQ_TIMEOUT_MS))
+        self._socket.connect(self.socket_add)
 
     def __getattr__(self, name):
         return _Mod(name, self._request)
@@ -80,7 +78,7 @@ class Sdk(object):
             data = json.loads(response.decode())
             if 'hijack' in data.keys():
                 data['socket'] = self._socket
-            return data
+            response = data
         except FileNotFoundError:
             response = {'error': "can't connect to service"}
         except OSError as err:
@@ -94,8 +92,8 @@ class Sdk(object):
 
         # in case something went wrong, destroy the connection, and next time
         # try again
-        self.ctx.destroy(1)
-        self.ctx = None
+        finally:
+            self.ctx.destroy(1)
         return response
 
 
