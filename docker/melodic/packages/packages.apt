@@ -25,3 +25,5 @@ devscripts
 fakeroot
 # Communication
 python-zmq
+python3-zmq
+python3-aiozmq

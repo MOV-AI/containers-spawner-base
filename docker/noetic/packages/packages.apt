@@ -25,4 +25,5 @@ fakeroot
 # noetic spawner warning
 python3-debian
 # Communication
-python-zmq
+python3-zmq
+python3-aiozmq
