@@ -17,10 +17,12 @@ dh-autoreconf
 libudev-dev
 libusb-1.0-0-dev
 # packaging dependencies
-python3-bloom 
-debhelper 
-build-essential 
+python3-bloom
+debhelper
+build-essential
 devscripts
 fakeroot
 # noetic spawner warning
 python3-debian
+# Communication
+libzmq5
