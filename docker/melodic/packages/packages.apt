@@ -24,6 +24,6 @@ python-bloom
 devscripts
 fakeroot
 # Communication
-python-zmq
-python3-zmq
-python3-aiozmq
+python-zmq=16.0.2-2build2
+python3-zmq=16.0.2-2build2
+python3-aiozmq=0.7.1-2
