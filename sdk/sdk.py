@@ -1,13 +1,21 @@
-""" Movai-Service's SDK """
+"""
+   Copyright (C) Mov.ai  - All Rights Reserved
+   Unauthorized copying of this file, via any medium is strictly prohibited
+   Proprietary and confidential
 
-import socket
+   Developers:
+   - Dor Marcous (dor@mov.ai) - 2022
+"""
+
 import json
 import os
+import zmq
+
+MOVAI_ZMQ_TIMEOUT_MS = os.getenv("MOVAI_ZMQ_TIMEOUT_MS", 10000)
+MOVAI_SOCKET = os.getenv("MOVAI_INNER_SOCKET", "ipc:///run/movai/movai.sock")
 
 """
-sdk.module.command(params...)
-
-sdk = Sdk('/vra/merfdas.sock')
+How to use:
 sdk.module.function(params...)
 sdk.__getattr__(module).__getattr__(function).__call__(params...)
 """
@@ -35,17 +43,27 @@ class _Mod(object):
 
 class Sdk(object):
 
-    def __init__(self, unix_socket: str = '/var/run/movai/movai.sock'):
-        if not os.path.exists(unix_socket):
-            raise FileNotFoundError(f"Socket '{unix_socket}' not found")
-        self._unix_socket = unix_socket
+    def __init__(self, socket_add: str = MOVAI_SOCKET):
+        self._socket = None
+        self.ctx = None
+        self.socket_add = socket_add
+        self.init_port()
+
+    def init_port(self):
+        if self.ctx is None:
+            self.ctx = zmq.Context()
+            self._socket = self.ctx.socket(zmq.REQ)
+            self._socket.setsockopt(zmq.IDENTITY, "sdk_req".encode('utf8'))
+            self._socket.setsockopt(zmq.RCVTIMEO, int(MOVAI_ZMQ_TIMEOUT_MS))
+            self._socket.connect(self.socket_add)
 
     def __getattr__(self, name):
         return _Mod(name, self._request)
 
-    def _request(self, _mod: str, _cmd: str, timeout: float=None, **params):
-        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM, 0)
-        sock.settimeout(timeout)
+    def _request(self, _mod: str, _cmd: str, timeout_ms: int = None, **params):
+        self.init_port()
+        if timeout_ms is not None:
+            self._socket.setsockopt(zmq.RCVTIMEO, int(timeout_ms))
         req_data = {
             'request': 'action',
             'request_params': {
@@ -54,27 +72,31 @@ class Sdk(object):
                 'command_params': params
             }
         }
-        raw_data = json.dumps(req_data).encode()
         try:
-            sock.connect(self._unix_socket)
-        except FileNotFoundError:
-            return {'error': "Can't connect to socket"}
-        except OSError as err:
-            return {'error': str(err)}
-        sock.send(raw_data)
-        response = sock.recv(2048)
+            raw_data = json.dumps(req_data).encode('utf8')
+            self._socket.send(raw_data)
+            response = self._socket.recv()
 
-        try:
             data = json.loads(response.decode())
             if 'hijack' in data.keys():
-                data['socket'] = sock
-            else:
-                sock.close()
+                data['socket'] = self._socket
             return data
+        except FileNotFoundError:
+            response = {'error': "can't connect to service"}
+        except OSError as err:
+            response = {'error': str(err)}
         except json.JSONDecodeError:
-            sock.close()
-            return {'error': "can't parse data from server. Raw response: %s" % response}
+            response = {'error': "can't parse data from server. Raw response: %s" % response}
+        except zmq.error.Again:
+            response = {'error': "movai socket got timeout, try increacing timeout"}
+        except json.JSONDecodeError:
+            response = {'error': "can't parse data from server. Raw response: %s" % response}
 
+        # in case something went wrong, destroy the connection, and next time
+        # try again
+        self.ctx.destroy(1)
+        self.ctx = None
+        return response
 
 
 __all__ = ['Sdk']

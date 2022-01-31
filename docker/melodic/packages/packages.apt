@@ -23,3 +23,5 @@ build-essential
 python-bloom
 devscripts
 fakeroot
+# Communication
+python-zmq

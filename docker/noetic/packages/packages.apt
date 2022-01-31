@@ -24,3 +24,5 @@ devscripts
 fakeroot
 # noetic spawner warning
 python3-debian
+# Communication
+python-zmq
