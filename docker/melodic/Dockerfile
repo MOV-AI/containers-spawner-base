@@ -1,6 +1,6 @@
 # === builder
 ARG DOCKER_REGISTRY="registry.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/devops/movai-base-melodic:v1.0.1 AS builder
+FROM ${DOCKER_REGISTRY}/devops/movai-base-melodic:v1.4.1 AS builder
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
