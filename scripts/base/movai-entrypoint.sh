@@ -11,29 +11,6 @@ if [ -f ${ROS1_USER_WS}/setup.bash ]; then
     source ${ROS1_USER_WS}/setup.bash
 fi
 
-# First run apt initializations
-if [ ! -f "${MOVAI_HOME}/.first_run_apt" ]; then
-    touch "${MOVAI_HOME}/.first_run_apt"
-
-    if [ "$MOVAI_ENV" = "develop" ]; then
-        MOVAI_PPA="dev"
-    elif [ "$MOVAI_ENV" = "qa" ]; then
-        MOVAI_PPA="testing"
-    else
-        MOVAI_PPA="main"
-    fi
-    # Update ppa with correct env and make sure it is not cohabiting with another one
-    for ppa_env in dev testing main; do
-        # remove any old repo
-        sudo add-apt-repository -r -n "deb https://artifacts.cloud.mov.ai/repository/ppa-${ppa_env} ${ppa_env} main"
-    done || true
-    sudo add-apt-repository -n "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-$MOVAI_PPA $MOVAI_PPA main"
-
-    if [ "$MOVAI_ENV" = "develop" ]; then
-        /usr/local/bin/deploy.sh
-    fi
-fi
-
 export PATH=${MOVAI_HOME}/.local/bin:${PATH}
 export PYTHONPATH=${APP_PATH}:${MOVAI_HOME}/sdk:${PYTHONPATH}
 
@@ -59,7 +36,7 @@ fi
 
 # Launch spawner init db tool
 echo "Info : initializing local DB ..."
-/usr/bin/python3 -m tools.init_local_db >/dev/null
+/usr/bin/python3 -m tools.init_local_db >/dev/null &
 echo "Info : initializing local DB. DONE"
 
 # First run metadata initializations
