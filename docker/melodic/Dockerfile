@@ -59,7 +59,7 @@ RUN /usr/local/bin/enable-custom-rosdep.sh PROD && \
     sudo apt autoremove -y && \
     sudo apt-get clean
 
-# Specifc tasks to do to the user homespace
+# Specific tasks to do to the user homespace
 COPY scripts/base/user.rc /tmp/user.rc
 RUN /usr/local/bin/user-provision.sh
 
