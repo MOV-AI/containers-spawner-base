@@ -5,7 +5,3 @@ opencv-python==4.2.0.32
 Rtree==0.9.4
 dubins==1.0.1
 pyzmq==19.0.2
-movai-core-shared==1.0.0.7
-dal==1.0.0.20
-gd_node==1.0.0.2
-flow-initiator==1.0.0.6

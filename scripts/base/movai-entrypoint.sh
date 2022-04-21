@@ -46,8 +46,7 @@ if [ ! -f "${MOVAI_HOME}/.first_run_metadata" ]; then
     # this require to be installing on a running MOVAI spawner container
     MOVAI_PACKAGES_PATH="/opt/ros/$ROS_DISTRO/share"
     MOVAI_BACKUP_TOOL_PATH="/opt/mov.ai/app"
-    if /usr/bin/python3 -m dal.tools.backup
-    then
+    if [ -d "$MOVAI_BACKUP_TOOL_PATH/tools" ]; then
         echo "Info : initializing local DB with local packages metadata"
     else
         echo "Warning : local DB initializer not found"
@@ -58,9 +57,9 @@ if [ ! -f "${MOVAI_HOME}/.first_run_metadata" ]; then
     do
         echo "Info : initializing local DB with $PACKAGE_PATH"
         PACKAGE_BASE_PATH=$(dirname "$PACKAGE_PATH")
-        /usr/bin/python3 -m dal.tools.backup -f -i -a import -m "$PACKAGE_BASE_PATH/manifest.txt" -r "$PACKAGE_BASE_PATH" -p "$PACKAGE_BASE_PATH/metadata"
+        /usr/bin/python3 -m tools.backup -f -i -a import -m "$PACKAGE_BASE_PATH/manifest.txt" -r "$PACKAGE_BASE_PATH" -p "$PACKAGE_BASE_PATH/metadata"
     done
     popd > /dev/null
 fi
 
-/usr/bin/python3 -m flow_initiator.spawner.async_movaicore -v
+/usr/bin/python3 -m flow_initiator

@@ -61,13 +61,13 @@ COPY scripts/base/backup.sh \
     /usr/local/bin/
 COPY resources /usr/local/share/pypi-confs/resources
 
-# enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
 RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
     add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-testing testing main" && \
     # Add our pip repos
-    setup-pypi-env.sh DEV \
+    setup-pypi-env.sh INT \
+    # enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
     /usr/local/bin/enable-custom-rosdep.sh PROD && \
     # Install required packages
     /usr/local/bin/install-packages.sh && \
@@ -80,7 +80,9 @@ RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg 
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/* && \
     # Clean temp files
-    rm -rf /tmp/*
+    rm -rf /tmp/* && \
+    # Temporary link to tools
+    ln -sf /usr/local/lib/$PYTHON_VERSION/dist-packages/dal/tools/ /opt/mov.ai/app/tools
 
 # Run everything as mov.ai user
 USER movai
