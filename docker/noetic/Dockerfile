@@ -1,6 +1,6 @@
 # === builder
-ARG DOCKER_REGISTRY="registry.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/devops/movai-base-noetic:v1.4.5 AS builder
+ARG DOCKER_REGISTRY="registry.aws.cloud.mov.ai"
+FROM ${DOCKER_REGISTRY}/devops/movai-base-noetic:v1.4.9 AS builder
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
@@ -55,28 +55,34 @@ COPY scripts/base/backup.sh \
     scripts/base/enable-custom-rosdep.sh \
     scripts/base/provision.sh \
     scripts/base/install-packages.sh \
-    scripts/base/movai-entrypoint.sh /usr/local/bin/
+    scripts/base/movai-entrypoint.sh \
+    scripts/base/setup-pypi-env.sh \
+    #dest dir
+    /usr/local/bin/
+COPY resources /usr/local/share/pypi-confs/resources
 
-# enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
 RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
-    add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-main main main" && \
-    apt-get update > /dev/null && \
+    add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-testing testing main" && \
+    # Add our pip repos
+    setup-pypi-env.sh INT \
+    # enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
     /usr/local/bin/enable-custom-rosdep.sh PROD && \
     # Install required packages
     /usr/local/bin/install-packages.sh && \
     # Make sure python3 is the only installed one
-    # Make sure latest stable movai-spawner is installed
     apt-get update > /dev/null && \
-    apt-get install -y --no-install-recommends python-is-python3 movai-spawner && \
+    apt-get install -y --no-install-recommends python-is-python3 && \
     # Clean apt
     apt-get autoremove -y && \
     apt-get clean -y > /dev/null && \
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/* && \
     # Clean temp files
-    rm -rf /tmp/*
+    rm -rf /tmp/* && \
+    # Temporary link to tools
+    ln -s /usr/local/lib/python$PYTHON_VERSION/dist-packages/dal/tools /opt/mov.ai/app/tools
 
 # Run everything as mov.ai user
 USER movai

@@ -1,6 +1,6 @@
 # === builder
-ARG DOCKER_REGISTRY="registry.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/devops/movai-base-melodic:v1.4.5 AS builder
+ARG DOCKER_REGISTRY="registry.aws.cloud.mov.ai"
+FROM ${DOCKER_REGISTRY}/devops/movai-base-melodic:v1.4.9 AS builder
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
@@ -42,45 +42,40 @@ COPY --chown=movai:movai scripts/base/movai-ros-provision.sh /tmp/movai-ros-prov
 COPY docker/$ROS_VERSION/packages/packages.apt /tmp/packages.apt
 COPY docker/$ROS_VERSION/packages/requirements.txt /tmp/requirements.txt
 COPY scripts/base/packages.bash /tmp/packages.bash
-# Copy runtime scripts
-COPY scripts/base/movai-packaging.bash /usr/local/lib/movai-packaging.bash
-COPY scripts/base/movai-plugins/ /usr/local/lib/movai-plugins/
-COPY scripts/base/backup.sh /usr/local/bin/backup.sh
-COPY scripts/base/ros1-workspace-build.sh /usr/local/bin/ros1-workspace-build.sh
-COPY scripts/base/ros1-workspace-package.sh /usr/local/bin/ros1-workspace-package.sh
-COPY scripts/base/enable-custom-rosdep.sh /usr/local/bin/enable-custom-rosdep.sh
-COPY scripts/base/provision.sh /usr/local/bin/provision.sh
-
-# enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
-# hadolint ignore=DL3004
-RUN /usr/local/bin/enable-custom-rosdep.sh PROD && \
-    # Install required packages
-    /usr/local/bin/install-packages.sh && \
-    sudo apt autoremove -y && \
-    sudo apt-get clean
-
-# Specifc tasks to do to the user homespace
-COPY scripts/base/user.rc /tmp/user.rc
-RUN /usr/local/bin/user-provision.sh
-
-# Copy custom bash rc
-COPY --chown=movai:movai scripts/base/movai.bash ${MOVAI_HOME}/movai.bash
-
-# Copy movai SDK to inside container
-COPY --chown=movai:movai sdk/ ${MOVAI_HOME}/sdk/
 
 # Copy runtime scripts
-COPY scripts/base/movai-entrypoint.sh /usr/local/bin/movai-entrypoint.sh
+COPY scripts/base/movai-packaging.bash scripts/base/movai-plugins/ /usr/local/lib/
+COPY scripts/base/backup.sh \
+    scripts/base/ros1-workspace-build.sh \
+    scripts/base/ros1-workspace-package.sh \
+    scripts/base/enable-custom-rosdep.sh \
+    scripts/base/provision.sh \
+    scripts/base/install-packages.sh \
+    scripts/base/movai-entrypoint.sh \
+    scripts/base/setup-pypi-env.sh \
+    #dest dir
+    /usr/local/bin/
+COPY resources /usr/local/share/pypi-confs/resources
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
 RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
-    add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-main main main" && \
-    apt-get update > /dev/null && \
-    apt-get -y --no-install-recommends install movai-spawner && \
+    add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-testing testing main" && \
+    # Add our pip repos
+    setup-pypi-env.sh INT \
+    # enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
+    /usr/local/bin/enable-custom-rosdep.sh PROD && \
+    # Install required packages
+    /usr/local/bin/install-packages.sh && \
+    # Clean apt
+    apt-get autoremove -y && \
     apt-get clean -y > /dev/null && \
     rm -rf /var/cache/apt/* && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    # Clean temp files
+    rm -rf /tmp/* && \
+    # Temporary link to tools
+    ln -s /usr/local/lib/python$PYTHON_VERSION/dist-packages/dal/tools/ /opt/mov.ai/app/tools
 
 # Run everything as mov.ai user
 USER movai

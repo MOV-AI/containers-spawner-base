@@ -36,7 +36,7 @@ fi
 
 # Launch spawner init db tool
 echo "Info : initializing local DB ..."
-/usr/bin/python3 -m tools.init_local_db >/dev/null &
+/usr/bin/python3 -m flow_initiator.tools.init_local_db >/dev/null &
 echo "Info : initializing local DB. DONE"
 
 # First run metadata initializations
@@ -62,4 +62,4 @@ if [ ! -f "${MOVAI_HOME}/.first_run_metadata" ] && [ "$UPDATE_MASTER_METADATA" =
     popd > /dev/null
 fi
 
-"${APP_PATH}"/async_movaicore.py -v
+/usr/bin/python3 -m flow_initiator
