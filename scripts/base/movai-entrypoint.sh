@@ -40,7 +40,7 @@ echo "Info : initializing local DB ..."
 echo "Info : initializing local DB. DONE"
 
 # First run metadata initializations
-if [ ! -f "${MOVAI_HOME}/.first_run_metadata" ]; then
+if [ ! -f "${MOVAI_HOME}/.first_run_metadata" ] && [ "$UPDATE_MASTER_METADATA" = "true" ]; then
     touch "${MOVAI_HOME}/.first_run_metadata"
 
     # this require to be installing on a running MOVAI spawner container
