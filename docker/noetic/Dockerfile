@@ -1,7 +1,6 @@
 # === builder
 ARG DOCKER_REGISTRY="registry.aws.cloud.mov.ai"
 FROM ${DOCKER_REGISTRY}/devops/movai-base-noetic:v1.4.9 AS builder
-
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
 LABEL maintainer="devops@mov.ai"
