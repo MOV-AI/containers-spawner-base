@@ -82,7 +82,7 @@ RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg 
     # Clean temp files
     rm -rf /tmp/* && \
     # Temporary link to tools
-    ln -sf /usr/local/lib/$PYTHON_VERSION/dist-packages/dal/tools/ /opt/mov.ai/app/tools
+    ln -s /usr/local/lib/python$PYTHON_VERSION/dist-packages/dal/tools /opt/mov.ai/app/tools
 
 # Run everything as mov.ai user
 USER movai
