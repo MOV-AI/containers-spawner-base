@@ -18,7 +18,7 @@ on:
     types: [released]
 jobs:
   spawner-base-melodic:
-    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
+    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@feat/docker_target
     with:
       docker_file: docker/melodic/Dockerfile
       docker_image: registry.cloud.mov.ai/devops/spawner-base-melodic
@@ -30,7 +30,7 @@ jobs:
       registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
 
   spawner-base-noetic:
-    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
+    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@feat/docker_target
     with:
       docker_file: docker/noetic/Dockerfile
       docker_image: registry.cloud.mov.ai/devops/spawner-base-noetic
