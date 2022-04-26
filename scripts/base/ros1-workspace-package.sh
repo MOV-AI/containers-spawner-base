@@ -1,12 +1,12 @@
 #!/bin/bash
 #
-# Copyright 2021 Mov AI
+# Copyright 2021 MOV.AI
 #
-#    Licensed under the Apache License, Version 2.0 (the "License");
+#    Licensed under the Mov.AI License version 1.0;
 #    you may not use this file except in compliance with the License.
 #    You may obtain a copy of the License at
 #
-#        http://www.apache.org/licenses/LICENSE-2.0
+#        https://www.mov.ai/flow-license/
 #
 #    Unless required by applicable law or agreed to in writing, software
 #    distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,7 +41,7 @@ function local_publish(){
     find ../ -name "${pkg_name}*.deb" |
     while read GEN_DEB; do cp "$GEN_DEB" "${LOCAL_REGISTRY}"; done
 
-    
+
     # have rosdep sources use ros-pkgs.yaml
     bash enable-custom-rosdep.sh "LOCAL"
 
@@ -87,7 +87,7 @@ function is_ros_metapackage(){
     then
         IS_ROS_META_PKG=0
     fi
-    
+
 }
 
 function overwrite_control_architecture(){
@@ -98,7 +98,7 @@ function overwrite_control_architecture(){
     if [ -z "$anchor" ]; then
         echo "$desired_arch" >>debian/controll
     fi
-    
+
     sed -i "s/$anchor/$desired_arch/g" debian/control
 
 }
@@ -135,16 +135,16 @@ function generate_package(){
 
         dpkg-buildpackage -nc -b -rfakeroot -us -uc -tc 2> $pkg_log_TMP_FILEs
 
-        deb_found=$(find ../ -name "${pkg_name}*.deb") 
+        deb_found=$(find ../ -name "${pkg_name}*.deb")
         if [ ! "$deb_found" ]
         then
             # print failure
             printf "Failed during packaging :\n"
             cat $pkg_log_TMP_FILE
-            set -e 
+            set -e
             exit 1
         fi
-            
+
         local_publish $pkg_name
         rosdep update
 
@@ -163,13 +163,13 @@ function generate_package(){
             exit 2
         fi
     fi
-        
+
 }
 
 function boostrap_export_ros_package_xml(){
     package_xml=$1
     export_section="\n  <export>\n  <\/export>\n"
-    
+
     anchor="<\/package>"
     sed -i "s/$anchor/$export_section$anchor/g" $package_xml
 }
@@ -234,17 +234,17 @@ done
 
 max_attempts=5
 for (( i=1; i<=$max_attempts; i++ ))
-do  
+do
     echo "Attempt number $i on resolving dependencies. Re-iterating the projects that have been postponed."
-    
+
     if [ ${#FAILED_DEB_BUILDS[@]} -ne 0 ]; then
 
-        iterator=("${FAILED_DEB_BUILDS[@]}")   
+        iterator=("${FAILED_DEB_BUILDS[@]}")
         FAILED_DEB_BUILDS=()
         for SUB_COMPONENT_PATH in "${iterator[@]}"; do
             generate_package "$SUB_COMPONENT_PATH"
         done
-    
+
     fi
 
 done
