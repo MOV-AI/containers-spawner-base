@@ -44,6 +44,7 @@ jobs:
       registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
 
   spawner-ign-melodic:
+    needs: [ "spawner-base-melodic" ]
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@feat/docker_target
     with:
       docker_file: docker/melodic/Dockerfile
@@ -58,6 +59,7 @@ jobs:
 
   spawner-ign-noetic:
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@feat/docker_target
+    needs: [ "spawner-base-noetic" ]
     with:
       docker_file: docker/noetic/Dockerfile
       docker_image: registry.cloud.mov.ai/devops/spawner-ign-noetic
