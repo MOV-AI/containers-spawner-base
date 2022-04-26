@@ -59,6 +59,8 @@ COPY scripts/base/backup.sh \
     #dest dir
     /usr/local/bin/
 COPY resources /usr/local/share/pypi-confs/resources
+# Copy GD_Node script
+COPY --chown=movai:movai scripts/base/GD_Node.py ${MOVAI_HOME}/app/GD_Node.py
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
