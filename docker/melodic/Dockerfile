@@ -63,7 +63,7 @@ COPY resources /usr/local/share/pypi-confs/resources
 COPY --chown=movai:movai scripts/base/GD_Node.py ${MOVAI_HOME}/app/GD_Node.py
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-# hadolint ignore=DL3008
+
 RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
     add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-testing testing main" && \
     # Add our pip repos
@@ -104,7 +104,7 @@ USER movai
 ENV IGNITION_VERSION=fortress
 
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
-
+# hadolint ignore=DL3004
 RUN curl -fsSL http://packages.osrfoundation.org/gazebo.key | sudo apt-key add - && \
     sudo add-apt-repository "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" && \
     sudo apt-get install -y --no-install-recommends ros-noetic-movai-ros-ign=0.111.2-19 && \
