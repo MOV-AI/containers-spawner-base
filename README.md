@@ -6,11 +6,19 @@ This is the SPAWNER docker project
 
 Melodic version :
 
-    docker build --pull -t spawner-melodic -f docker/melodic/Dockerfile .
+    docker build --pull -t spawner-melodic -f docker/melodic/Dockerfile --target spawner .
 
 Noetic version :
 
-    docker build --pull -t spawner-noetic -f docker/noetic/Dockerfile .
+    docker build --pull -t spawner-noetic -f docker/noetic/Dockerfile --target spawner .
+
+Melodic IGN version :
+
+    docker build --pull -t spawner-ign-melodic -f docker/melodic/Dockerfile --target spawner-ign .
+
+Noetic IGN version :
+
+    docker build --pull -t spawner-ign-noetic -f docker/noetic/Dockerfile --target spawner-ign .
 
 ## Features
 

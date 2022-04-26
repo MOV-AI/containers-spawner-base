@@ -1,6 +1,6 @@
-# === builder
+# === spawner
 ARG DOCKER_REGISTRY="registry.aws.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/devops/movai-base-noetic:v1.4.9 AS builder
+FROM ${DOCKER_REGISTRY}/devops/movai-base-noetic:v1.4.9 AS spawner
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
 LABEL maintainer="devops@mov.ai"
@@ -87,3 +87,29 @@ RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg 
 
 # Run everything as mov.ai user
 USER movai
+
+# === spawner-ign
+FROM spawner AS spawner-ign
+
+# Labels
+LABEL description="MOV.AI Spawner IGN Image"
+LABEL maintainer="devops@mov.ai"
+
+USER root
+
+ENV GLOBAL_ROSDEP_SOURCELIST_FILE="/etc/ros/rosdep/sources.list.d/20-default.list"
+RUN printf "# yaml for non defined third party dependencies\
+    \nyaml https://artifacts.cloud.mov.ai/repository/movai-applications/prod/third-party-translations/rosdep.yaml\n%s"\
+    "$(cat $GLOBAL_ROSDEP_SOURCELIST_FILE)" > $GLOBAL_ROSDEP_SOURCELIST_FILE
+
+USER movai
+
+ENV IGNITION_VERSION=fortress
+
+SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
+
+RUN curl -fsSL http://packages.osrfoundation.org/gazebo.key | sudo apt-key add - && \
+    sudo add-apt-repository "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" && \
+    sudo apt-get install -y --no-install-recommends ros-noetic-movai-ros-ign=0.111.2-19 && \
+    sudo apt-get clean -y > /dev/null && \
+    rm -rf /opt/mov.ai/user/cache/
