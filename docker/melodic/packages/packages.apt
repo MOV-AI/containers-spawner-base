@@ -19,6 +19,7 @@ libudev-dev
 libusb-1.0-0-dev
 # packaging dependencies
 debhelper
-python-bloom
+#python-bloom
 devscripts
 fakeroot
+flow-initiator=1.0.1.5

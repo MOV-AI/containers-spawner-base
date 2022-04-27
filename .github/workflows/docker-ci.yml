@@ -7,11 +7,13 @@ on:
   push:
     branches:
       - main
+      - dev
     tags:
       - 'v*.*.*'
   pull_request:
     branches:
       - main
+      - dev
   release:
     types: [released]
 jobs:
@@ -21,6 +23,9 @@ jobs:
       docker_file: docker/melodic/Dockerfile
       docker_image: registry.cloud.mov.ai/devops/spawner-base-melodic
       github_ref: ${{ github.ref }}
+      public: true
+      public_image: ce/spawner-base-melodic
+      target: spawner
     secrets:
       registry_user: ${{ secrets.PORTUS_APP_USER }}
       registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
@@ -31,48 +36,37 @@ jobs:
       docker_file: docker/noetic/Dockerfile
       docker_image: registry.cloud.mov.ai/devops/spawner-base-noetic
       github_ref: ${{ github.ref }}
+      public: true
+      public_image: ce/spawner-base-noetic
+      target: spawner
     secrets:
       registry_user: ${{ secrets.PORTUS_APP_USER }}
       registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
 
-  extra_tagging:
-    needs: [spawner-base-melodic, spawner-base-noetic]
-    runs-on: ubuntu-latest
-    env:
-      DOCKER_PUSH: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v')}}
-      DOCKER_REGISTRY: registry.cloud.mov.ai
-    if: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v')}}
-    steps:
-      - name: Login to Movai Registry
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.PORTUS_APP_USER }}
-          password: ${{ secrets.PORTUS_APP_TOKEN }}
-          registry: ${{ env.DOCKER_REGISTRY }}
-      - name: "Verify push and tag vars from env"
-        id: get_version
-        env:
-          GITHUB_REF: ${{ github.ref }}
-          DOCKER_PUSH: ${{ env.DOCKER_PUSH }}
-        run: |
-          echo $GITHUB_REF
-          echo $DOCKER_PUSH
-          if [ "${DOCKER_PUSH}" = "true" ]; then
-            if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
-              echo ::set-output name=DOCKER_TAG::latest
-            else
-              echo ::set-output name=DOCKER_TAG::${GITHUB_REF##*/}
-            fi
-          else
-            echo ::set-output name=DOCKER_TAG::local
-          fi
-      - name: Extra tags
-        run: |
-          images="spawner-base-melodic spawner-base-noetic"
-          for img in $images; do
-            docker pull "${{ env.DOCKER_REGISTRY }}/devops/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
-            docker tag "${{ env.DOCKER_REGISTRY }}/devops/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}" "${{ env.DOCKER_REGISTRY }}/develop/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
-            docker tag "${{ env.DOCKER_REGISTRY }}/devops/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}" "${{ env.DOCKER_REGISTRY }}/qa/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
-            docker push "${{ env.DOCKER_REGISTRY }}/develop/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
-            docker push "${{ env.DOCKER_REGISTRY }}/qa/${img}:${{ steps.get_version.outputs.DOCKER_TAG }}"
-          done
+  spawner-ign-melodic:
+    needs: [ "spawner-base-melodic" ]
+    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
+    with:
+      docker_file: docker/melodic/Dockerfile
+      docker_image: registry.cloud.mov.ai/devops/spawner-ign-melodic
+      github_ref: ${{ github.ref }}
+      public: true
+      public_image: ce/spawner-ign-melodic
+      target: spawner-ign
+    secrets:
+      registry_user: ${{ secrets.PORTUS_APP_USER }}
+      registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
+
+  spawner-ign-noetic:
+    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
+    needs: [ "spawner-base-noetic" ]
+    with:
+      docker_file: docker/noetic/Dockerfile
+      docker_image: registry.cloud.mov.ai/devops/spawner-ign-noetic
+      github_ref: ${{ github.ref }}
+      public: true
+      public_image: ce/spawner-ign-noetic
+      target: spawner-ign
+    secrets:
+      registry_user: ${{ secrets.PORTUS_APP_USER }}
+      registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
