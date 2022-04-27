@@ -22,4 +22,4 @@ debhelper
 #python-bloom
 devscripts
 fakeroot
-flow-initiator=1.0.1.4
+flow-initiator=1.0.1.5
