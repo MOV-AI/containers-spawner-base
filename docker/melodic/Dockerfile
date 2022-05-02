@@ -1,6 +1,7 @@
 # === spawner
 ARG DOCKER_REGISTRY="registry.aws.cloud.mov.ai"
 FROM ${DOCKER_REGISTRY}/devops/movai-base-melodic:v1.4.9 AS spawner
+
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
 LABEL maintainer="devops@mov.ai"
@@ -8,6 +9,8 @@ LABEL movai="spawner"
 LABEL environment="release"
 
 ### Environment config
+ARG APT_REPOSITORY="https://artifacts.aws.cloud.mov.ai/repository"
+
 ENV MOVAI_ENV="release" \
     MOVAI_USERSPACE="${MOVAI_HOME}/user" \
     APP_NAME="spawner" \
@@ -64,8 +67,8 @@ COPY --chown=movai:movai scripts/base/GD_Node.py ${MOVAI_HOME}/app/GD_Node.py
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
-    add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-testing testing main" && \
+RUN curl -fsSL $APT_REPOSITORY/movai-applications/gpg | apt-key add - && \
+    add-apt-repository "deb [arch=all] $APT_REPOSITORY/ppa-public main main" && \
     # Add our pip repos
     setup-pypi-env.sh INT \
     # enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
