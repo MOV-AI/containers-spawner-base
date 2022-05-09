@@ -21,7 +21,7 @@ jobs:
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
     with:
       docker_file: docker/melodic/Dockerfile
-      docker_image: registry.cloud.mov.ai/devops/spawner-base-melodic
+      docker_image: devops/spawner-base-melodic
       github_ref: ${{ github.ref }}
       public: true
       public_image: ce/spawner-base-melodic
@@ -34,7 +34,7 @@ jobs:
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
     with:
       docker_file: docker/noetic/Dockerfile
-      docker_image: registry.cloud.mov.ai/devops/spawner-base-noetic
+      docker_image: devops/spawner-base-noetic
       github_ref: ${{ github.ref }}
       public: true
       public_image: ce/spawner-base-noetic
@@ -48,7 +48,7 @@ jobs:
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
     with:
       docker_file: docker/melodic/Dockerfile
-      docker_image: registry.cloud.mov.ai/devops/spawner-ign-melodic
+      docker_image: devops/spawner-ign-melodic
       github_ref: ${{ github.ref }}
       public: true
       public_image: ce/spawner-ign-melodic
@@ -62,7 +62,7 @@ jobs:
     needs: [ "spawner-base-noetic" ]
     with:
       docker_file: docker/noetic/Dockerfile
-      docker_image: registry.cloud.mov.ai/devops/spawner-ign-noetic
+      docker_image: devops/spawner-ign-noetic
       github_ref: ${{ github.ref }}
       public: true
       public_image: ce/spawner-ign-noetic
