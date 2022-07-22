@@ -24,46 +24,39 @@ jobs:
       docker_image: ce/spawner-base-melodic
       github_ref: ${{ github.ref }}
     secrets:
-      registry_user: ${{ secrets.NPM_USER }}
-      registry_password: ${{ secrets.NPM_TOKEN }}
+      registry_user: ${{ github.actor }}
+      registry_password: ${{ secrets.GITHUB_TOKEN }}
 
   spawner-base-noetic:
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
     with:
       docker_file: docker/noetic/Dockerfile
-      docker_image: devops/spawner-base-noetic
+      docker_image: ce/spawner-base-noetic
       github_ref: ${{ github.ref }}
-      public: true
-      public_image: ce/spawner-base-noetic
       target: spawner
     secrets:
-      registry_user: ${{ secrets.NPM_USER }}
-      registry_password: ${{ secrets.NPM_TOKEN }}
+      registry_user: ${{ github.actor }}
+      registry_password: ${{ secrets.GITHUB_TOKEN }}
 
   spawner-ign-melodic:
     needs: [ "spawner-base-melodic" ]
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
     with:
       docker_file: docker/melodic/Dockerfile
-      docker_image: devops/spawner-ign-melodic
+      docker_image: ce/spawner-ign-melodic
       github_ref: ${{ github.ref }}
-      public: true
-      public_image: ce/spawner-ign-melodic
       target: spawner-ign
     secrets:
-      registry_user: ${{ secrets.NPM_USER }}
-      registry_password: ${{ secrets.NPM_TOKEN }}
+      registry_user: ${{ github.actor }}
+      registry_password: ${{ secrets.GITHUB_TOKEN }}
 
   spawner-ign-noetic:
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
     needs: [ "spawner-base-noetic" ]
     with:
       docker_file: docker/noetic/Dockerfile
-      docker_image: devops/spawner-ign-noetic
+      docker_image: ce/spawner-ign-noetic
       github_ref: ${{ github.ref }}
-      public: true
-      public_image: ce/spawner-ign-noetic
-      target: spawner-ign
     secrets:
-      registry_user: ${{ secrets.NPM_USER }}
-      registry_password: ${{ secrets.NPM_TOKEN }}
+      registry_user: ${{ github.actor }}
+      registry_password: ${{ secrets.GITHUB_TOKEN }}
