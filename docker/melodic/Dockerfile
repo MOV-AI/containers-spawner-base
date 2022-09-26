@@ -1,6 +1,7 @@
 # === spawner
-ARG DOCKER_REGISTRY="registry.aws.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/devops/movai-base-melodic:v1.4.9 AS spawner
+ARG DOCKER_REGISTRY="pubregistry.aws.cloud.mov.ai"
+FROM ${DOCKER_REGISTRY}/ce/movai-base-melodic:v1.4.11 AS spawner
+
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
@@ -110,7 +111,7 @@ SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3004
 RUN curl -fsSL http://packages.osrfoundation.org/gazebo.key | sudo apt-key add - && \
     sudo add-apt-repository "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" && \
-    sudo apt-get install -y --no-install-recommends libgflags-dev ignition-fortress  && \
+    sudo apt-get install -y --no-install-recommends libgflags-dev ignition-fortress && \
     git clone https://github.com/ignitionrobotics/ros_ign.git /opt/mov.ai/user/cache/ros/src/ros_ign --branch melodic && \
     ros1-workspace-build.sh && \
     sudo apt-get clean -y > /dev/null && \
