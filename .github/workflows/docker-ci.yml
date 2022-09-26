@@ -36,6 +36,7 @@ jobs:
       pub_registry_user: ${{ secrets.PORTUS_APP_USER }}
       pub_registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
       snyk_token: ${{ secrets.SNYK_TOKEN }}
+
   spawner-base-noetic:
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@v1
     with:
