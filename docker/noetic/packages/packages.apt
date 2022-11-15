@@ -26,4 +26,4 @@ fakeroot
 python3-debian
 # Communication
 libzmq5
-flow-initiator=1.0.1.8
+flow-initiator=1.0.1-10
