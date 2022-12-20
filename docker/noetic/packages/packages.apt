@@ -1,7 +1,7 @@
 # HW related
 bluez
 bluez-tools
-freeglut3-dev
+# freeglut3-dev
 # Mov.ai ROS1 base packages
 python3-dev
 python3-scipy
@@ -26,4 +26,4 @@ fakeroot
 python3-debian
 # Communication
 libzmq5
-flow-initiator=1.0.1.8
+flow-initiator=2.4.*
