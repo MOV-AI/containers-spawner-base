@@ -18,7 +18,6 @@ dh-autoreconf
 libudev-dev
 libusb-1.0-0-dev
 # packaging dependencies
-# python3-bloom
 debhelper
 devscripts
 fakeroot
@@ -26,4 +25,4 @@ fakeroot
 python3-debian
 # Communication
 libzmq5
-flow-initiator=2.4.*
+flow-initiator=2.4.0.2
