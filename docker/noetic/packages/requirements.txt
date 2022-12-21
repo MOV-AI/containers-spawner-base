@@ -1,4 +1,4 @@
-empy==3.3.2
+empy==3.3.4
 catkin_pkg
 opencv-python==4.5.3.56
 pyzmq==23.1.0
