@@ -51,7 +51,7 @@ fi
 
 # Launch spawner init db tool
 echo "Info : initializing local DB ..."
-/usr/bin/python3 -m flow_initiator.tools.init_local_db >/dev/null &
+init_local_db >/dev/null &
 echo "Info : initializing local DB. DONE"
 
 # First run metadata initializations
@@ -72,9 +72,9 @@ if [ ! -f "${MOVAI_HOME}/.first_run_metadata" ] && [ "$UPDATE_MASTER_METADATA" =
     do
         echo "Info : initializing local DB with $PACKAGE_PATH"
         PACKAGE_BASE_PATH=$(dirname "$PACKAGE_PATH")
-        /usr/bin/python3 -m tools.backup -f -i -a import -m "$PACKAGE_BASE_PATH/manifest.txt" -r "$PACKAGE_BASE_PATH" -p "$PACKAGE_BASE_PATH/metadata"
+        dal_backup -f -i -a import -m "$PACKAGE_BASE_PATH/manifest.txt" -r "$PACKAGE_BASE_PATH" -p "$PACKAGE_BASE_PATH/metadata"
     done
     popd > /dev/null
 fi
 
-/usr/bin/python3 -m flow_initiator
+flow_initiator
