@@ -17,46 +17,44 @@ on:
   release:
     types: [released]
 jobs:
-  spawner-base-melodic:
-    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
-    with:
-      docker_file: docker/melodic/Dockerfile
-      docker_image: devops/spawner-base-melodic
-      github_ref: ${{ github.ref }}
-    secrets:
-      registry_user: ${{ github.actor }}
-      registry_password: ${{ secrets.GITHUB_TOKEN }}
-
   spawner-base-noetic:
-    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
+    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@v1
     with:
       docker_file: docker/noetic/Dockerfile
       docker_image: devops/spawner-base-noetic
+      public: true
+      public_image: ce/spawner-base-noetic
       github_ref: ${{ github.ref }}
+      deploy: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v')}}
+      version: ${GITHUB_REF##*/}
+      push_latest: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v') }}
+      snyk_check: true
       target: spawner
+      platforms: linux/amd64
     secrets:
-      registry_user: ${{ github.actor }}
-      registry_password: ${{ secrets.GITHUB_TOKEN }}
-
-  spawner-ign-melodic:
-    needs: [ "spawner-base-melodic" ]
-    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
-    with:
-      docker_file: docker/melodic/Dockerfile
-      docker_image: devops/spawner-ign-melodic
-      github_ref: ${{ github.ref }}
-      target: spawner-ign
-    secrets:
-      registry_user: ${{ github.actor }}
-      registry_password: ${{ secrets.GITHUB_TOKEN }}
+      registry_user: ${{ secrets.PORTUS_APP_USER }}
+      registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
+      pub_registry_user: ${{ secrets.PORTUS_APP_USER }}
+      pub_registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
+      snyk_token: ${{ secrets.SNYK_TOKEN }}
 
   spawner-ign-noetic:
-    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@main
+    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@v1
     needs: [ "spawner-base-noetic" ]
     with:
       docker_file: docker/noetic/Dockerfile
       docker_image: devops/spawner-ign-noetic
       github_ref: ${{ github.ref }}
+      public: true
+      public_image: ce/spawner-ign-noetic
+      deploy: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v')}}
+      version: ${GITHUB_REF##*/}
+      push_latest: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v') }}
+      snyk_check: true
+      target: spawner-ign
     secrets:
-      registry_user: ${{ github.actor }}
-      registry_password: ${{ secrets.GITHUB_TOKEN }}
+      registry_user: ${{ secrets.PORTUS_APP_USER }}
+      registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
+      pub_registry_user: ${{ secrets.PORTUS_APP_USER }}
+      pub_registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
+      snyk_token: ${{ secrets.SNYK_TOKEN }}
