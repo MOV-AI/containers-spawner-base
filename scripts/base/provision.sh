@@ -35,6 +35,7 @@ USER_FOLDERS=(
     ${MOVAI_USERSPACE}/cache/ros
     ${MOVAI_USERSPACE}/cache/src
     ${MOVAI_USERSPACE}/bags
+    ${MOVAI_USERSPACE}/database
 )
 
 for USER_FOLDER in "${USER_FOLDERS[@]}"; do
