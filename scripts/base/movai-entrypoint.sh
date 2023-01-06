@@ -36,7 +36,7 @@ export PYTHONPATH=${APP_PATH}:${MOVAI_HOME}/sdk:${PYTHONPATH}
 # If we have a userspace prepare it
 if [ -d "${MOVAI_USERSPACE}" ]; then
     echo "Userspace detected"
-    mkdir -p "${MOVAI_USERSPACE}/{bags,cache,database}"
+    mkdir -p "${MOVAI_USERSPACE}/{bags,database}"
 else
     echo "No userspace detected"
 fi
