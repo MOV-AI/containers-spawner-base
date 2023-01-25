@@ -26,4 +26,4 @@ python3-debian
 # Communication
 libzmq5
 # Main process
-flow-initiator=2.4.0.2
+flow-initiator=2.4.1.2
