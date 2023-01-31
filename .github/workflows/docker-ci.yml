@@ -21,7 +21,7 @@ jobs:
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@v1
     with:
       docker_file: docker/noetic/Dockerfile
-      docker_image: devops/spawner-base-noetic
+      docker_image: qa/spawner-base-noetic
       public: true
       public_image: ce/spawner-base-noetic
       github_ref: ${{ github.ref }}
@@ -43,7 +43,7 @@ jobs:
     needs: [ "spawner-base-noetic" ]
     with:
       docker_file: docker/noetic/Dockerfile
-      docker_image: devops/spawner-ign-noetic
+      docker_image: qa/spawner-ign-noetic
       github_ref: ${{ github.ref }}
       public: true
       public_image: ce/spawner-ign-noetic
