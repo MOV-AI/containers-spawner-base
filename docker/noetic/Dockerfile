@@ -69,6 +69,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
 RUN curl -fsSL $APT_REPOSITORY/movai-applications/gpg | apt-key add - && \
     add-apt-repository "deb [arch=all] $APT_REPOSITORY/ppa-public main main" && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg  && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null  && \
     # Add our pip repos
     setup-pypi-env.sh INT \
     # enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
@@ -86,7 +88,8 @@ RUN curl -fsSL $APT_REPOSITORY/movai-applications/gpg | apt-key add - && \
     # Clean temp files
     rm -rf /tmp/* && \
     # Temporary link to tools
-    ln -s /usr/local/lib/python$PYTHON_VERSION/dist-packages/dal/tools /opt/mov.ai/app/tools
+    ln -s /usr/local/lib/python$PYTHON_VERSION/dist-packages/dal/tools /opt/mov.ai/app/tools &&\
+    gpasswd -a $USER_NAME docker
 
 # Run everything as mov.ai user
 USER movai

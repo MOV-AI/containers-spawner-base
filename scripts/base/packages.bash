@@ -21,6 +21,7 @@ SUDO_COMMANDS=(
     /usr/bin/dpkg
     /usr/bin/make
     /usr/bin/bluetoothctl
+    /usr/bin/docker
 )
 
 # Setup available sudo commands for user movai

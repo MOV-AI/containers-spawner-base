@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "env": "qa",
+  "registry": "registry.cloud.mov.ai",
+  "robot": {
+    "name": "basic",
+    "fleet": {
+      "name": "movai",
+      "manager": "http://localhost",
+      "token": "WEBNaEsxRjhKam5DN1VvQWokZENaNGl4diVQOTQlb3JkI0YwbGpmdmQjTEQyQ0h3YkxzUk93Nk5AeTdwdnhDbwo="
+    },
+    "local-ip": "0.0.0.0",
+    "public-ip": "${PUBLIC_IP}",
+    "auto-start": false,
+    "self-provision": false
+  },
+  "spawner": {
+    "image": "devops/spawner-base-noetic",
+    "version": "v3.1.1",
+    "ports": [
+      11411,
+      9090
+    ],
+    "groups": [
+      "dialout",
+      "video",
+      "audio",
+      "users"
+    ],
+    "userspace": "${USERSPACE_FOLDER_PATH}",
+    "firmware": [
+      "flow-initiator=2.4.0.2",
+      "movai-web-api2=1.0.0.8",
+      "movai-core-enterprise=2.4.0.3",
+      "ros-noetic-movai-ports-and-messages=1.0.0-2"
+    ],
+    "enable": true,
+    "extra-env": []
+  },
+  "backend": {
+    "image": "backend-noetic",
+    "version": "2.4.0.4",
+    "nodes": [],
+    "firmware": [],
+    "enable": true,
+    "extra-env": []
+  },
+  "frontend": {
+    "firmware": [
+      "movai-launcher=2.2.3-5",
+      "movai-adminboard=2.2.3-5",
+      "movai-fleetmanager=2.2.3-10",
+      "movai-ide=2.4.0-2",
+      "movai-taskmanager=2.4.0-1"
+    ],
+    "image": "nodejs",
+    "version": "2.2.2022140",
+    "enable": false,
+    "launch": "",
+    "extra-env": []
+  },
+  "redis": {
+    "master": null,
+    "port": 6379,
+    "ssl": true,
+    "image": "devops/redis2",
+    "version": "v1.0.11",
+    "firmware": [],
+    "enable": true
+  },
+  "health-node": {
+    "image": "health-node",
+    "version": "0.0.1.3",
+    "firmware": [],
+    "enable": true,
+    "extra-env": []
+  },
+  "haproxy": {
+    "image": "devops/haproxy",
+    "version": "v1.0.8",
+    "enable": true
+  },
+  "telegraf": {
+    "image": "telegraf",
+    "version": "2.2.2022140",
+    "enable": true
+  },
+  "ros-tools": {
+    "image": "devops/ros-tools-noetic",
+    "version": "v1.0.3",
+    "enable": true
+  },
+  "monitoring": {
+    "image": "monitoring",
+    "version": "2.2.2022140",
+    "enable": true
+  },
+  "influxdb": {
+    "image": "influxdb",
+    "version": "v1.0.2",
+    "enable": true
+  },
+  "ros-master": {
+    "image": "devops/ros-master-noetic",
+    "version": "v2.4.0",
+    "enable": true
+  }
+}

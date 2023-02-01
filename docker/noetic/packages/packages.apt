@@ -27,3 +27,4 @@ python3-debian
 libzmq5
 # Main process
 flow-initiator=2.4.1.2
+docker-ce-cli
