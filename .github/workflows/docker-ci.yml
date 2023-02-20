@@ -18,7 +18,7 @@ on:
     types: [released]
 jobs:
   spawner-base-noetic:
-    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@v1
+    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@v2
     with:
       docker_file: docker/noetic/Dockerfile
       docker_image: qa/spawner-base-noetic
@@ -39,7 +39,7 @@ jobs:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
 
   spawner-ign-noetic:
-    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@v1
+    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@v2
     needs: [ "spawner-base-noetic" ]
     with:
       docker_file: docker/noetic/Dockerfile
