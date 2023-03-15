@@ -61,6 +61,8 @@ COPY scripts/base/backup.sh \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
 RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
+    curl -fsSL https://artifacts.aws.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
+    add-apt-repository "deb [arch=all] https://artifacts.aws.cloud.mov.ai/repository/ppa-public main main" && \
     add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-main main main" && \
     apt-get update > /dev/null && \
     /usr/local/bin/enable-custom-rosdep.sh PROD && \

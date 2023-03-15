@@ -5,6 +5,9 @@ SUDO_COMMANDS=(
     /usr/bin/dpkg
     /usr/bin/make
     /usr/bin/bluetoothctl
+    /usr/bin/python3
+    /usr/bin/rosdep
+    /usr/bin/mobros
 )
 
 # Setup available sudo commands for user movai
@@ -32,3 +35,15 @@ sudo -i -u movai /tmp/movai-ros-provision.sh
 
 # fix permission
 chown movai:movai -R ${MOVAI_HOME}
+
+{
+    echo "Package: *" 
+    echo "Pin: origin artifacts.cloud.mov.ai"
+    echo "Pin-Priority: 1001" 
+} >> /etc/apt/preferences.d/movai
+
+{
+    echo "Package: *"
+    echo "Pin: origin artifacts.aws.cloud.mov.ai"
+    echo "Pin-Priority: 1001"
+}  >> /etc/apt/preferences.d/movai-ros
