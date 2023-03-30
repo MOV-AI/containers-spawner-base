@@ -53,8 +53,6 @@ echo "Info : initializing local DB. DONE"
 
 # First run metadata initializations
 if [ ! -f "${MOVAI_HOME}/.first_run_metadata" ] && [ "$UPDATE_MASTER_METADATA" = "true" ]; then
-    touch "${MOVAI_HOME}/.first_run_metadata"
-
     # this require to be installing on a running MOVAI spawner container
     MOVAI_PACKAGES_PATH="/opt/ros/$ROS_DISTRO/share"
     MOVAI_BACKUP_TOOL_PATH="/opt/mov.ai/app"
@@ -72,6 +70,7 @@ if [ ! -f "${MOVAI_HOME}/.first_run_metadata" ] && [ "$UPDATE_MASTER_METADATA" =
         dal_backup -f -i -a import -m "$PACKAGE_BASE_PATH/manifest.txt" -r "$PACKAGE_BASE_PATH" -p "$PACKAGE_BASE_PATH/metadata"
     done
     popd > /dev/null
+    touch "${MOVAI_HOME}/.first_run_metadata"
 fi
 
 flow_initiator
