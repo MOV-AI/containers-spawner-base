@@ -27,4 +27,4 @@ python3-debian
 libzmq5
 mobros=2.0.0.19
 # Main process
-flow-initiator=2.4.1.13
+flow-initiator=2.4.1.15
