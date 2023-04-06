@@ -25,6 +25,6 @@ fakeroot
 python3-debian
 # Communication
 libzmq5
-mobros=2.0.0.20
+mobros=2.0.0.21
 # Main process
 flow-initiator=2.4.1.15
