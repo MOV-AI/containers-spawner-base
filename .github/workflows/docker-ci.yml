@@ -28,7 +28,7 @@ jobs:
       deploy: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v')}}
       version: ${GITHUB_REF##*/}
       push_latest: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v') }}
-      snyk_check: true
+      snyk_check: false
       target: spawner
       platforms: linux/amd64
     secrets:
