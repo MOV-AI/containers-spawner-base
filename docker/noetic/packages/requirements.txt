@@ -1,5 +1,5 @@
 empy==3.3.2
 catkin_pkg
-opencv-python==4.7.0.68
-pyzmq==24.0.1
-aiozmq==0.9.0
+opencv-python==4.7.0.72
+pyzmq==25.0.1
+aiozmq==1.0.0
