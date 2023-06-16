@@ -79,11 +79,11 @@ RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg 
     /usr/bin/python3 -m pip install pyclean && \
     # Remove __pycache__ folders
     /usr/bin/python3 -m pyclean /usr/ /opt/ && \
-    # Remove apt cache and tmp files    
-    rm -rf /var/cache/apt/* &&\
+    # Remove apt cache and tmp files
+    rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/* &&\
-    rm -rf /var/log/*
-    rn -rf /tmp/*
+    rm -rf /var/log/* &&\
+    rm -rf /tmp/*
 
 # Run everything as mov.ai user
 USER movai
@@ -114,7 +114,7 @@ RUN curl -fsSL http://packages.osrfoundation.org/gazebo.key | sudo apt-key add -
     rm -rf /opt/mov.ai/user/cache/ && \
     # Clean apt
     sudo apt-get autoremove -y && \
-    sudo apt-get clean -y > /dev/null && \    
+    sudo apt-get clean -y > /dev/null && \
     # Remove __pycache__ folders
     sudo /usr/bin/python3 -m pyclean /usr/ /opt/ && \
     # Remove apt cache and tmp files
