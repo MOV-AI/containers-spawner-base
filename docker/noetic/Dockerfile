@@ -79,12 +79,11 @@ RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg 
     /usr/bin/python3 -m pip install pyclean && \
     # Remove __pycache__ folders
     /usr/bin/python3 -m pyclean /usr/ /opt/ && \
-    # Remove apt cache and tmp files
-    python3 -c "import glob, shutil, os; \
-[shutil.rmtree(d) for pattern in ['/var/lib/apt/lists/*', '/tmp/*', '/var/cache/apt/*'] \
-    for d in glob.glob(pattern) if os.path.isdir(d)]" && \
+    # Remove apt cache and tmp files    
+    rm -rf /var/cache/apt/* &&\
     rm -rf /var/lib/apt/lists/* &&\
     rm -rf /var/log/*
+    rn -rf /tmp/*
 
 # Run everything as mov.ai user
 USER movai
@@ -114,15 +113,11 @@ RUN curl -fsSL http://packages.osrfoundation.org/gazebo.key | sudo apt-key add -
     sudo apt-get clean -y > /dev/null && \
     rm -rf /opt/mov.ai/user/cache/ && \
     # Clean apt
-    apt-get autoremove -y && \
-    apt-get clean -y > /dev/null && \
-    # Clean pip temp files
-    /usr/bin/python3 -m pip install pyclean && \
+    sudo apt-get autoremove -y && \
+    sudo apt-get clean -y > /dev/null && \    
     # Remove __pycache__ folders
-    /usr/bin/python3 -m pyclean /usr/ /opt/ && \
+    sudo /usr/bin/python3 -m pyclean /usr/ /opt/ && \
     # Remove apt cache and tmp files
-    python3 -c "import glob, shutil, os; \
-[shutil.rmtree(d) for pattern in ['/var/lib/apt/lists/*', '/tmp/*', '/var/cache/apt/*'] \
-    for d in glob.glob(pattern) if os.path.isdir(d)]" && \
-    rm -rf /var/lib/apt/lists/* &&\
-    rm -rf /var/log/*
+    sudo python3 -c "import glob, shutil, os; \
+[shutil.rmtree(d) for pattern in ['/var/lib/apt/lists/*', '/tmp/*', '/var/cache/apt/*', '/var/log/*'] \
+    for d in glob.glob(pattern) if os.path.isdir(d)]"
