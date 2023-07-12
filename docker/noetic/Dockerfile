@@ -38,6 +38,8 @@ RUN usermod -aG dialout movai && \
 COPY scripts/base/user.rc /tmp/user.rc
 # Copy custom bash rc
 COPY --chown=movai:movai scripts/base/movai.bash ${MOVAI_HOME}/movai.bash
+# Copy mobros config
+COPY --chown=movai:movai resources/config /etc/mobros/config
 # Copy movai SDK to inside container
 COPY --chown=movai:movai sdk/ ${MOVAI_HOME}/sdk/
 RUN /usr/local/bin/user-provision.sh
