@@ -1,6 +1,6 @@
 # === spawner
 ARG DOCKER_REGISTRY="pubregistry.aws.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/ce/movai-base-noetic:v2.4.0 AS spawner
+FROM ${DOCKER_REGISTRY}/ce/movai-base-noetic:v2.4.2 AS spawner
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
@@ -38,6 +38,8 @@ RUN usermod -aG dialout movai && \
 COPY scripts/base/user.rc /tmp/user.rc
 # Copy custom bash rc
 COPY --chown=movai:movai scripts/base/movai.bash ${MOVAI_HOME}/movai.bash
+# Copy mobros config
+COPY --chown=movai:movai resources/config /etc/mobros/config
 # Copy movai SDK to inside container
 COPY --chown=movai:movai sdk/ ${MOVAI_HOME}/sdk/
 RUN /usr/local/bin/user-provision.sh
