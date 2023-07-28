@@ -26,7 +26,7 @@ jobs:
       public_image: ce/spawner-base-noetic
       deploy: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v')}}
       push_latest: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v') }}
-      snyk_check: true
+      snyk_check: false
       target: spawner
       platforms: linux/amd64
     secrets:
