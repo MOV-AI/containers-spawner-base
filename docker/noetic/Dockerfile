@@ -1,6 +1,6 @@
 # === spawner
 ARG DOCKER_REGISTRY="pubregistry.aws.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/ce/movai-base-noetic:v2.4.0 AS spawner
+FROM ${DOCKER_REGISTRY}/ce/movai-base-noetic:v2.4.3 AS spawner
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
