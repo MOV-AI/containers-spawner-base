@@ -17,6 +17,15 @@ on:
   release:
     types: [released]
 jobs:
+  context-verification:
+    name: Context Verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Github Reference Context
+        run: echo ${GITHUB_REF##*/} |
+             echo ${{ github.ref }} |
+             echo ${{ github.ref_name }}
+
   spawner-base-noetic:
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@v2
     with:
