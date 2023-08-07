@@ -22,6 +22,7 @@ jobs:
     with:
       docker_file: docker/noetic/Dockerfile
       docker_image: qa/spawner-base-noetic
+      version: ${GITHUB_REF##*/}
       public: true
       public_image: ce/spawner-base-noetic
       deploy: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v')}}
@@ -44,6 +45,7 @@ jobs:
     with:
       docker_file: docker/noetic/Dockerfile
       docker_image: qa/spawner-ign-noetic
+      version: ${GITHUB_REF##*/}
       public: true
       public_image: ce/spawner-ign-noetic
       deploy: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v')}}
