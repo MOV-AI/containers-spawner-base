@@ -55,7 +55,9 @@ COPY scripts/base/backup.sh \
     scripts/base/enable-custom-rosdep.sh \
     scripts/base/provision.sh \
     scripts/base/install-packages.sh \
+    scripts/base/setup-pypi-env.sh \
     scripts/base/movai-entrypoint.sh /usr/local/bin/
+COPY resources /usr/local/share/pypi-confs/resources
 
 # enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -66,6 +68,7 @@ RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg 
     add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-main main main" && \
     apt-get update > /dev/null && \
     /usr/local/bin/enable-custom-rosdep.sh PROD && \
+    /usr/local/bin/setup-pypi-env.sh INT \
     # Install required packages
     /usr/local/bin/install-packages.sh && \
     # Make sure python3 is the only installed one
@@ -114,10 +117,4 @@ RUN curl -fsSL http://packages.osrfoundation.org/gazebo.key | sudo apt-key add -
     rm -rf /opt/mov.ai/user/cache/ && \
     # Clean apt
     sudo apt-get autoremove -y && \
-    sudo apt-get clean -y > /dev/null && \
-    # Remove __pycache__ folders
-    sudo /usr/bin/python3 -m pyclean /usr/ /opt/ && \
-    # Remove apt cache and tmp files
-    sudo python3 -c "import glob, shutil, os; \
-[shutil.rmtree(d) for pattern in ['/var/lib/apt/lists/*', '/tmp/*', '/var/cache/apt/*', '/var/log/*'] \
-    for d in glob.glob(pattern) if os.path.isdir(d)]"
+    sudo apt-get clean -y > /dev/null
