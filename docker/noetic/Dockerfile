@@ -80,6 +80,8 @@ RUN curl -fsSL $APT_REPOSITORY/movai-applications/gpg | apt-key add - && \
     # Make sure python3 is the only installed one
     apt-get update > /dev/null && \
     apt-get install -y --no-install-recommends python-is-python3 && \
+    mkdir -p /opt/mov.ai/docs && \
+    chown -R movai:movai /opt/mov.ai/docs && \
     # Clean apt
     apt-get autoremove -y && \
     apt-get clean -y > /dev/null && \
