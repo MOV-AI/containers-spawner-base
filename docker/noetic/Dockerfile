@@ -67,8 +67,11 @@ RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg 
     add-apt-repository "deb [arch=all] https://artifacts.aws.cloud.mov.ai/repository/ppa-public main main" && \
     add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-main main main" && \
     apt-get update > /dev/null && \
+    mkdir -p /opt/mov.ai/docs && \
+    chown -R movai:movai /opt/mov.ai/docs && \
     /usr/local/bin/enable-custom-rosdep.sh PROD && \
     /usr/local/bin/setup-pypi-env.sh INT \
+    sudo apt install -y libjpeg-dev --no-install-recommends && \
     # Install required packages
     /usr/local/bin/install-packages.sh && \
     # Make sure python3 is the only installed one
