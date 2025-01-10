@@ -25,4 +25,4 @@ fakeroot
 python3-debian
 # Communication
 libzmq5
-mobros=2.1.0.8
+mobros=2.1.0.12
