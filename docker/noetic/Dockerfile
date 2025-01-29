@@ -113,7 +113,7 @@ SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3004
 RUN curl -fsSL http://packages.osrfoundation.org/gazebo.key | sudo apt-key add - && \
     sudo add-apt-repository "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" && \
-    sudo apt-get install -y --no-install-recommends ros-noetic-movai-ros-ign=0.111.2-19 && \
+    sudo mobros install ros-noetic-movai-ros-ign=0.111.2-19 -y && \
     sudo apt-get clean -y > /dev/null && \
     rm -rf /opt/mov.ai/user/cache/ && \
     # Clean apt
