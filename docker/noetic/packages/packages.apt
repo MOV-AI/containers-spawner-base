@@ -25,4 +25,7 @@ fakeroot
 python3-debian
 # Communication
 libzmq5
+#movai-spawner=2.3.0-34
+#ros-noetic-movai-ports-and-messages=1.0.0-2
 mobros=2.1.0.13
+#python-is-python3
