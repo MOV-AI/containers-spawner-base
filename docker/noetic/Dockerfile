@@ -74,7 +74,12 @@ RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg 
     # Make sure python3 is the only installed one
     # Make sure latest stable movai-spawner is installed
     apt-get update > /dev/null && \
-    apt-get install -y --no-install-recommends python-is-python3 movai-spawner && \
+    apt-get install -y --no-install-recommends python-is-python3 && \
+    echo "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-testing testing main" >> /etc/apt/sources.list.d/movai-testing.list && \
+    apt-get update > /dev/null && \
+    apt-get install -y --no-install-recommends movai-spawner=2.3.0-35 ros-noetic-movai-ports-and-messages=1.0.0-2 && \
+    rm /etc/apt/sources.list.d/movai-testing.list && \
+    apt-get update > /dev/null && \
     # Clean apt
     apt-get autoremove -y && \
     apt-get clean -y > /dev/null && \
