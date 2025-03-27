@@ -70,14 +70,18 @@ RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg 
     mkdir -p /opt/mov.ai/docs && \
     chown -R movai:movai /opt/mov.ai/docs && \
     /usr/local/bin/enable-custom-rosdep.sh PROD && \
-    /usr/local/bin/setup-pypi-env.sh INT \
-    sudo apt install -y libjpeg-dev --no-install-recommends && \
+    /usr/local/bin/setup-pypi-env.sh INT && \
     # Install required packages
     /usr/local/bin/install-packages.sh && \
     # Make sure python3 is the only installed one
     # Make sure latest stable movai-spawner is installed
     apt-get update > /dev/null && \
-    apt-get install -y --no-install-recommends python-is-python3 movai-spawner && \
+    apt-get install -y --no-install-recommends python-is-python3 libjpeg-dev && \
+    echo "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-testing testing main" >> /etc/apt/sources.list.d/movai-testing.list && \
+    apt-get update > /dev/null && \
+    apt-get install -y --no-install-recommends movai-spawner=2.3.0-35 ros-noetic-movai-ports-and-messages=1.0.0-2 && \
+    rm /etc/apt/sources.list.d/movai-testing.list && \
+    apt-get update > /dev/null && \
     # Clean apt
     apt-get autoremove -y && \
     apt-get clean -y > /dev/null && \
