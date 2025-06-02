@@ -64,7 +64,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
 RUN curl -fsSL https://artifacts.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
     curl -fsSL https://artifacts.aws.cloud.mov.ai/repository/movai-applications/gpg | apt-key add - && \
-    curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key | tee /usr/share/keyrings/ros.key  > /dev/null && \
+    curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key | gpg --dearmor -o /usr/share/keyrings/ros.key && \
     add-apt-repository "deb [arch=all] https://artifacts.aws.cloud.mov.ai/repository/ppa-public main main" && \
     add-apt-repository "deb [arch=all] https://artifacts.cloud.mov.ai/repository/ppa-main main main" && \
     apt-get update > /dev/null && \
