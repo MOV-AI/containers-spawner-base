@@ -146,7 +146,7 @@ function generate_package(){
         fi
 
         local_publish $pkg_name
-        rosdep update
+        rosdep update --include-eol-distros --rosdistro=${ROS_DISTRO}
 
     else
         reason_identified=$(cat $STDERR_TMP_FILE | grep "$FAILURE_ROSDEP_MISSING_DEPENDENCY")
