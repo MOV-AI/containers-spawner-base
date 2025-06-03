@@ -69,7 +69,8 @@ COPY --chown=movai:movai scripts/base/GD_Node.py ${MOVAI_HOME}/app/GD_Node.py
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
-RUN curl -fsSL $APT_REPOSITORY/movai-applications/gpg | apt-key add - && \
+RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros.key && \
+    curl -fsSL $APT_REPOSITORY/movai-applications/gpg | apt-key add - && \
     add-apt-repository "deb [arch=all] $APT_REPOSITORY/ppa-public main main" && \
     # Add our pip repos
     setup-pypi-env.sh INT \
