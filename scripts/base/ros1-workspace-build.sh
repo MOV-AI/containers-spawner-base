@@ -32,7 +32,7 @@ wstool init ${MOVAI_USERSPACE}/cache/ros/src
 printf "Updating ROS1 Workspace:\n"
 cd ${ROS1_USER_WS} >/dev/null
 wstool update -t ${MOVAI_USERSPACE}/cache/ros/src
-rosdep update
+rosdep update --include-eol-distros --rosdistro=${ROS_DISTRO}
 rosdep install --from-paths ${MOVAI_USERSPACE}/cache/ros/src --ignore-src --rosdistro ${ROS_DISTRO} -y -r
 
 if [ -z "$CMAKE_ARGS" ]; then
