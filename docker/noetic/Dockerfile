@@ -91,7 +91,7 @@ RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o
     # Clean temp files
     rm -rf /tmp/* && \
     # Temporary link to tools
-    ln -s /usr/local/lib/python$PYTHON_VERSION/dist-packages/dal/tools /opt/mov.ai/app/tools
+    ln -s /opt/venvs/flow-initiator/lib/python$PYTHON_VERSION/site-packages/dal/tools /opt/mov.ai/app/tools
 
 # Run everything as mov.ai user
 USER movai
