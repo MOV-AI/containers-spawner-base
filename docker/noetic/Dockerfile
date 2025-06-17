@@ -59,7 +59,6 @@ COPY scripts/base/backup.sh \
     scripts/base/enable-custom-rosdep.sh \
     scripts/base/provision.sh \
     scripts/base/install-packages.sh \
-    scripts/base/movai-entrypoint.sh \
     scripts/base/setup-pypi-env.sh \
     #dest dir
     /usr/local/bin/
