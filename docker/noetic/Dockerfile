@@ -1,6 +1,6 @@
 # === spawner
 ARG DOCKER_REGISTRY="pubregistry.aws.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/ce/movai-base-noetic:v2.4.5 AS spawner
+FROM ${DOCKER_REGISTRY}/ce/movai-base-noetic:v2.5.1 AS spawner
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
@@ -59,7 +59,6 @@ COPY scripts/base/backup.sh \
     scripts/base/enable-custom-rosdep.sh \
     scripts/base/provision.sh \
     scripts/base/install-packages.sh \
-    scripts/base/movai-entrypoint.sh \
     scripts/base/setup-pypi-env.sh \
     #dest dir
     /usr/local/bin/
@@ -89,9 +88,7 @@ RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/* && \
     # Clean temp files
-    rm -rf /tmp/* && \
-    # Temporary link to tools
-    ln -s /usr/local/lib/python$PYTHON_VERSION/dist-packages/dal/tools /opt/mov.ai/app/tools
+    rm -rf /tmp/*
 
 # Run everything as mov.ai user
 USER movai
