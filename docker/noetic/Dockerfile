@@ -88,7 +88,7 @@ RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/* && \
     # Clean temp files
-    rm -rf /tmp/* && \
+    rm -rf /tmp/*
 
 # Run everything as mov.ai user
 USER movai
