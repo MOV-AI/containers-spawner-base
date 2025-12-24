@@ -1,6 +1,6 @@
 # === spawner
 ARG DOCKER_REGISTRY="pubregistry.aws.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/ce/movai-base-noetic:v2.4.5 AS spawner
+FROM ${DOCKER_REGISTRY}/ce/movai-base-humble:local AS spawner
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
@@ -89,9 +89,7 @@ RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/* && \
     # Clean temp files
-    rm -rf /tmp/* && \
-    # Temporary link to tools
-    ln -s /usr/local/lib/python$PYTHON_VERSION/dist-packages/dal/tools /opt/mov.ai/app/tools
+    rm -rf /tmp/*
 
 # Run everything as mov.ai user
 USER movai
@@ -112,12 +110,17 @@ RUN printf "# yaml for non defined third party dependencies\
 
 USER movai
 
-ENV IGNITION_VERSION=fortress
+ENV IGNITION_VERSION=garden
 
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3004
 RUN curl -fsSL http://packages.osrfoundation.org/gazebo.key | sudo apt-key add - && \
     sudo add-apt-repository "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" && \
-    sudo apt-get install -y --no-install-recommends ros-noetic-movai-ros-ign=1.111.2-3 && \
+    sudo apt-get install -y --no-install-recommends \
+        ignition-garden \
+        ignition-gazebo7 \
+        ros-humble-ros-ign-gazebo \
+        ros-humble-ros-ign-bridge \
+        ros-humble-ros-ign-image && \
     sudo apt-get clean -y > /dev/null && \
     rm -rf /opt/mov.ai/user/cache/
