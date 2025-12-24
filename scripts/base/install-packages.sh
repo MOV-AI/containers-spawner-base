@@ -29,10 +29,7 @@ if [ -f ${PACKAGE_FILE} ]; then
     printf "APT Packages list: %s\n" "${packages_list}"
     apt-get update
     DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install ${packages_list}
-    apt-get clean -y
     rm --preserve-root ${PACKAGE_FILE}
-    rm -rf /var/cache/apt/*
-    rm -rf /var/lib/apt/lists/*
 fi
 
 # Install custom dependencies and commands
@@ -54,3 +51,8 @@ PACKAGES_SCRIPT=/tmp/packages.bash
 
 printf "Cleaning up ...\n"
 rm -rf /tmp/*
+apt-get clean -y
+apt-get autoclean -y
+apt-get autopurge -y
+rm -rf /var/cache/apt/*
+rm -rf /var/lib/apt/lists/*
