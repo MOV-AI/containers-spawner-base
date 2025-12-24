@@ -1,6 +1,6 @@
 # === spawner
 ARG DOCKER_REGISTRY="pubregistry.aws.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/ce/movai-base-humble:local AS spawner
+FROM ${DOCKER_REGISTRY}/ce/movai-base-humble:v2.7.0 AS spawner
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
@@ -24,8 +24,7 @@ ENV MOVAI_ENV="release" \
     ROS1_USER_WS="${MOVAI_HOME}/workspaces/USER_ROS1" \
     ROS2_USER_WS="${MOVAI_HOME}/workspaces/USER_ROS2" \
     ROS_MASTER_URI="http://ros-master:11311/" \
-    MOVAI_MANAGER_URI="" \
-    FLEET_TOKEN=""
+    MOVAI_MANAGER_URI=""
 
 # Add user to hardware groups
 USER root
@@ -78,9 +77,6 @@ RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o
     /usr/local/bin/enable-custom-rosdep.sh PROD && \
     # Install required packages
     /usr/local/bin/install-packages.sh && \
-    # Make sure python3 is the only installed one
-    apt-get update > /dev/null && \
-    apt-get install -y --no-install-recommends python-is-python3 && \
     mkdir -p /opt/mov.ai/docs && \
     chown -R movai:movai /opt/mov.ai/docs && \
     # Clean apt

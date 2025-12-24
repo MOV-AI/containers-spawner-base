@@ -2,9 +2,6 @@ name: "Build&Deploy spawner-base images"
 
 on:
   push:
-    branches:
-      - main
-      - dev
     tags:
       - 'v*.*.*'
   pull_request:

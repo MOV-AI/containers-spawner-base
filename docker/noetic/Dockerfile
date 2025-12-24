@@ -1,6 +1,6 @@
 # === spawner
 ARG DOCKER_REGISTRY="pubregistry.aws.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/ce/movai-base-noetic:v2.4.5 AS spawner
+FROM ${DOCKER_REGISTRY}/ce/movai-base-noetic:v2.7.0 AS spawner
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
@@ -24,8 +24,7 @@ ENV MOVAI_ENV="release" \
     ROS1_USER_WS="${MOVAI_HOME}/workspaces/USER_ROS1" \
     ROS2_USER_WS="${MOVAI_HOME}/workspaces/USER_ROS2" \
     ROS_MASTER_URI="http://ros-master:11311/" \
-    MOVAI_MANAGER_URI="" \
-    FLEET_TOKEN=""
+    MOVAI_MANAGER_URI=""
 
 # Add user to hardware groups
 USER root
