@@ -76,6 +76,7 @@ RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o
     # enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
     /usr/local/bin/enable-custom-rosdep.sh PROD && \
     # Install required packages
+    apt-get install python3-pip --reinstall -y && \
     /usr/local/bin/install-packages.sh && \
     mkdir -p /opt/mov.ai/docs && \
     chown -R movai:movai /opt/mov.ai/docs && \

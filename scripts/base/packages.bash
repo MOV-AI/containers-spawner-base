@@ -46,16 +46,22 @@ done
 } >> /etc/sudoers.d/movai
 
 
-# Run movai-ros-provision as movai user
-sudo -i -u movai /tmp/movai-ros-provision.sh
+# Run movai-ros-provision as movai user if distro is ROS1
+if [ "${ROS_DISTRO}" != "melodic" ] && [ "${ROS_DISTRO}" != "noetic" ]; then
+    echo "Skipping ROS1 workspace provisioning for ROS_DISTRO=${ROS_DISTRO}"
+else
+    echo "Provisioning ROS1 workspace for ROS_DISTRO=${ROS_DISTRO}"
+    sudo -i -u movai /tmp/movai-ros-provision.sh
+fi
+
 
 # fix permission
 chown movai:movai -R ${MOVAI_HOME}
 
 {
-    echo "Package: *" 
+    echo "Package: *"
     echo "Pin: origin artifacts.cloud.mov.ai"
-    echo "Pin-Priority: 1001" 
+    echo "Pin-Priority: 1001"
 } >> /etc/apt/preferences.d/movai
 
 {
