@@ -1,15 +1,12 @@
-name: "Build&Deploy spawner-base images"
-
+name: "Build&Deploy docker images"
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
   pull_request:
     branches:
       - main
       - dev
-  release:
-    types: [released]
 
 jobs:
   build-and-deploy:
@@ -17,6 +14,7 @@ jobs:
     with:
       manifest_file: images-manifest.yml
       deploy: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v')}}
+      create_release: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v')}}
       version: auto
       push_latest: ${{ contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/tags/v') }}
     secrets:
@@ -28,5 +26,5 @@ jobs:
       github_registry_password: ${{ secrets.RAISE_BOT_COMMIT_PASSWORD }}
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       commit_user: ${{ secrets.RAISE_BOT_COMMIT_USER }}
-      commit_mail: ${{ secrets.RAISE_BOT_COMMIT_USER }}
+      commit_mail: ${{ secrets.RAISE_BOT_COMMIT_MAIL }}
       commit_token: ${{ secrets.RAISE_BOT_COMMIT_PASSWORD }}

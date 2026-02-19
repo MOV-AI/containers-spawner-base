@@ -74,7 +74,7 @@ build-ign-humble:
 
 build-humble-python38:
 	@echo "Building MOV.AI Spawner Base Humble with Python 3.8..."
-	docker build $(BUILD_OPTIONS) -t $(HUMBLE_PYTHON38_TAG) --target humble-python38 -f docker/humble/Dockerfile .
+	docker build $(BUILD_OPTIONS) -t $(HUMBLE_PYTHON38_TAG) --target spawner --build-arg BASE_IMAGE="ce/movai-base-humble-python38" -f docker/humble/Dockerfile .
 
 # Run targets - Start interactive containers
 run-noetic: build-noetic

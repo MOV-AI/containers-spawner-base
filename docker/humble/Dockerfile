@@ -1,6 +1,8 @@
 # === spawner
 ARG DOCKER_REGISTRY="pubregistry.aws.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/ce/movai-base-humble:v2.7.4 AS spawner
+ARG BASE_IMAGE="ce/movai-base-humble"
+ARG BASE_IMAGE_TAG="v2.7.4"
+FROM ${DOCKER_REGISTRY}/${BASE_IMAGE}:${BASE_IMAGE_TAG} AS spawner
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
@@ -90,19 +92,6 @@ RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o
     rm -rf /var/lib/apt/lists/* && \
     # Clean temp files
     rm -rf /tmp/*
-
-# Build ros1_bridge from source
-RUN mkdir -p /opt/ros1_bridge_ws/src && \
-    cd /opt/ros1_bridge_ws/src && \
-    git clone https://github.com/ros2/ros1_bridge.git -b humble && \
-    cd /opt/ros1_bridge_ws && \
-    bash -c "source /opt/ros/noetic/setup.bash && \
-             source /opt/ros/humble/setup.bash && \
-             colcon build --symlink-install --packages-select ros1_bridge --cmake-force-configure" && \
-    chown -R movai:movai /opt/ros1_bridge_ws && \
-    # Clean up build artifacts to reduce image size
-    rm -rf /opt/ros1_bridge_ws/build/ros1_bridge/CMakeFiles && \
-    rm -rf /opt/ros1_bridge_ws/log
 
 # Run everything as mov.ai user
 USER movai

@@ -27,7 +27,6 @@ ENV MOVAI_ENV="release" \
     MOVAI_MANAGER_URI=""
 
 # Add user to hardware groups
-USER root
 RUN usermod -aG dialout movai && \
     usermod -aG video movai && \
     usermod -aG audio movai && \
