@@ -1,7 +1,7 @@
 # === spawner
 ARG DOCKER_REGISTRY="pubregistry.aws.cloud.mov.ai"
 ARG BASE_IMAGE="ce/movai-base-humble"
-ARG BASE_IMAGE_TAG="v2.7.4"
+ARG BASE_IMAGE_TAG="2.7.5"
 FROM ${DOCKER_REGISTRY}/${BASE_IMAGE}:${BASE_IMAGE_TAG} AS spawner
 
 # Labels
