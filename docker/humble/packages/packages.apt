@@ -24,11 +24,3 @@ python3-debian
 # Communication
 libzmq5
 mobros
-# ROS 1 Noetic (required for ros1_bridge)
-ros-noetic-ros-base
-ros-noetic-roscpp
-ros-noetic-rospy
-ros-noetic-std-msgs
-ros-noetic-common-msgs
-ros-noetic-actionlib
-ros-noetic-actionlib-msgs
