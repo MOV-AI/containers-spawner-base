@@ -5,7 +5,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "pip"
-    directory: "docker/noetic/packages"
+  - package-ecosystem: "docker"
+    directories:
+      - "docker/noetic/"
+      - "docker/humble/"
     schedule:
       interval: "weekly"

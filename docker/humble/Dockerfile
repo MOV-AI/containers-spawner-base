@@ -70,7 +70,10 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
 RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros.key && \
     curl -fsSL $APT_REPOSITORY/movai-applications/gpg | apt-key add - && \
+    curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && \
+    echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.list.d/ros-latest.list && \
     add-apt-repository "deb [arch=all] $APT_REPOSITORY/ppa-public main main" && \
+
     # Add our pip repos
     setup-pypi-env.sh INT \
     # enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
@@ -87,6 +90,19 @@ RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o
     rm -rf /var/lib/apt/lists/* && \
     # Clean temp files
     rm -rf /tmp/*
+
+# Build ros1_bridge from source
+RUN mkdir -p /opt/ros1_bridge_ws/src && \
+    cd /opt/ros1_bridge_ws/src && \
+    git clone https://github.com/ros2/ros1_bridge.git -b humble && \
+    cd /opt/ros1_bridge_ws && \
+    bash -c "source /opt/ros/noetic/setup.bash && \
+             source /opt/ros/humble/setup.bash && \
+             colcon build --symlink-install --packages-select ros1_bridge --cmake-force-configure" && \
+    chown -R movai:movai /opt/ros1_bridge_ws && \
+    # Clean up build artifacts to reduce image size
+    rm -rf /opt/ros1_bridge_ws/build/ros1_bridge/CMakeFiles && \
+    rm -rf /opt/ros1_bridge_ws/log
 
 # Run everything as mov.ai user
 USER movai
