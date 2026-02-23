@@ -11,6 +11,18 @@ commandTests:
     command: "lsb_release"
     args: ["-r"]
     expectedOutput: ["22.04"]
+  - name: "ROS1 bridge setup can be sourced"
+    command: "bash"
+    args: ["-c", "source /opt/ros/humble/setup.bash && source /ros2_ws/ros-humble-ros1-bridge/install/local_setup.bash && ros2 pkg list | grep -q ros1_bridge && echo 'ros1_bridge found'"]
+    expectedOutput: ["ros1_bridge found"]
+  - name: "dynamic_bridge executable exists"
+    command: "bash"
+    args: ["-c", "source /opt/ros/humble/setup.bash && source /ros2_ws/ros-humble-ros1-bridge/install/local_setup.bash && which ros2_run && echo 'ros2_run found'; ls -la /ros2_ws/ros-humble-ros1-bridge/install/ros1_bridge/lib/ros1_bridge/ 2>/dev/null | grep -q dynamic_bridge && echo 'dynamic_bridge found'"]
+    excludedOutput: ["No such file"]
+  - name: "dynamic_bridge --print-pairs works"
+    command: "bash"
+    args: ["-c", "source /opt/ros/humble/setup.bash && source /ros2_ws/ros-humble-ros1-bridge/install/local_setup.bash && ros2 run ros1_bridge dynamic_bridge --print-pairs"]
+    expectedOutput: ["Supported ROS 2 <=> ROS 1 message type conversion pairs:", "Supported ROS 2 <=> ROS 1 service type conversion pairs:", "Supported ROS 2 <=> ROS 1 action type conversion pairs:", "std_msgs/msg/String", "geometry_msgs/msg/Twist", "sensor_msgs/msg/Image", "nav_msgs/msg/Odometry", "control_msgs/srv/QueryCalibrationState", "nav_msgs/srv/GetMap", "control_msgs/action/FollowJointTrajectory"]
 fileExistenceTests:
   - name: "MOV.AI app dir"
     path: "/opt/mov.ai/app"
@@ -20,4 +32,16 @@ fileExistenceTests:
     shouldExist: true
   - name: "MOV.AI updates dir"
     path: "/opt/mov.ai/updates"
+    shouldExist: true
+  - name: "ROS2 Humble setup script"
+    path: "/opt/ros/humble/setup.bash"
+    shouldExist: true
+  - name: "ROS1 bridge installation directory"
+    path: "/ros2_ws/ros-humble-ros1-bridge"
+    shouldExist: true
+  - name: "ROS1 bridge local_setup script"
+    path: "/ros2_ws/ros-humble-ros1-bridge/install/local_setup.bash"
+    shouldExist: true
+  - name: "ROS1 bridge library directory"
+    path: "/ros2_ws/ros-humble-ros1-bridge/install/ros1_bridge/lib"
     shouldExist: true

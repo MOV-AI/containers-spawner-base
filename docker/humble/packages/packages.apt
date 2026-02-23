@@ -25,5 +25,7 @@ python3-debian
 libzmq5
 mobros
 # ROS1 bridge
-ros-humble-example-interfaces \
+ros-humble-desktop
+ros-humble-control-msgs
+ros-humble-example-interfaces
 ros-humble-turtlesim

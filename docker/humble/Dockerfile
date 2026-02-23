@@ -281,23 +281,23 @@ RUN if [[ $(uname -m) = "arm64" || $(uname -m) = "aarch64" ]]; then             
     fi
 
 RUN ROS1_LIBS="libxmlrpcpp.so";                                                 \
-     ROS1_LIBS="$ROS1_LIBS librostime.so";                                      \
-     ROS1_LIBS="$ROS1_LIBS libroscpp.so";                                       \
-     ROS1_LIBS="$ROS1_LIBS libroscpp_serialization.so";                         \
-     ROS1_LIBS="$ROS1_LIBS librosconsole.so";                                   \
-     ROS1_LIBS="$ROS1_LIBS librosconsole_log4cxx.so";                           \
-     ROS1_LIBS="$ROS1_LIBS librosconsole_backend_interface.so";                 \
-     ROS1_LIBS="$ROS1_LIBS liblog4cxx.so";                                      \
-     ROS1_LIBS="$ROS1_LIBS libcpp_common.so";                                   \
-     ROS1_LIBS="$ROS1_LIBS libb64.so";                                          \
-     ROS1_LIBS="$ROS1_LIBS libaprutil-1.so";                                    \
-     ROS1_LIBS="$ROS1_LIBS libapr-1.so";                                        \
-     ROS1_LIBS="$ROS1_LIBS libactionlib.so.1d";                                 \
-     cd /ros-humble-ros1-bridge/install/ros1_bridge/lib;                        \
-     for soFile in $ROS1_LIBS; do                                               \
-       soFilePath=$(ldd libros1_bridge.so | grep $soFile | awk '{print $3;}');  \
-       cp $soFilePath ./;                                                       \
-     done
+    ROS1_LIBS="$ROS1_LIBS librostime.so";                                      \
+    ROS1_LIBS="$ROS1_LIBS libroscpp.so";                                       \
+    ROS1_LIBS="$ROS1_LIBS libroscpp_serialization.so";                         \
+    ROS1_LIBS="$ROS1_LIBS librosconsole.so";                                   \
+    ROS1_LIBS="$ROS1_LIBS librosconsole_log4cxx.so";                           \
+    ROS1_LIBS="$ROS1_LIBS librosconsole_backend_interface.so";                 \
+    ROS1_LIBS="$ROS1_LIBS liblog4cxx.so";                                      \
+    ROS1_LIBS="$ROS1_LIBS libcpp_common.so";                                   \
+    ROS1_LIBS="$ROS1_LIBS libb64.so";                                          \
+    ROS1_LIBS="$ROS1_LIBS libaprutil-1.so";                                    \
+    ROS1_LIBS="$ROS1_LIBS libapr-1.so";                                        \
+    ROS1_LIBS="$ROS1_LIBS libactionlib.so.1d";                                 \
+    cd /ros-humble-ros1-bridge/install/ros1_bridge/lib;                        \
+    for soFile in $ROS1_LIBS; do                                               \
+      soFilePath=$(ldd libros1_bridge.so | grep $soFile | awk '{print $3;}');  \
+      cp $soFilePath ./;                                                       \
+    done
 
 ###########################
 # 10.) Create ros1_bridge tarball
