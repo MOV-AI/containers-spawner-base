@@ -11,12 +11,14 @@ NOETIC_TAG = $(REGISTRY):noetic
 IGN_NOETIC_TAG = $(REGISTRY):ign-noetic
 HUMBLE_TAG = $(REGISTRY):humble
 HUMBLE_PYTHON38_TAG = $(REGISTRY):humble-python38
+ROS1_BRIDGE_BUILDER_TAG = $(REGISTRY):ros1-bridge-builder
 
 # All image tags
 ALL_TAGS = $(NOETIC_TAG) $(IGN_NOETIC_TAG) $(HUMBLE_TAG) $(HUMBLE_PYTHON38_TAG)
 
 .PHONY: help build build-all run test clean setup-multiarch
 .PHONY: build-noetic build-ign-noetic build-humble build-humble-python38
+.PHONY: build-ros1-bridge-builder extract-ros1-bridge
 .PHONY: run-noetic run-ign-noetic run-humble run-humble-python38
 .PHONY: test-noetic test-ign-noetic test-humble test-humble-python38
 .PHONY: buildx-all push-all
@@ -34,6 +36,7 @@ help:
 	@echo "  build-ign-noetic         	- Build ign-noetic flavor (Ignition Noetic)"
 	@echo "  build-humble        	- Build humble flavor (ROS2 Humble)"
 	@echo "  build-humble-python38 	- Build humble flavor with Python 3.8"
+	@echo "  build-ros1-bridge-builder - Build ROS1 bridge builder image"
 	@echo ""
 	@echo "Run targets:"
 	@echo "  run-<flavor>        - Run interactive container for specific flavor"
@@ -49,6 +52,7 @@ help:
 	@echo ""
 	@echo "Utility targets:"
 	@echo "  clean               - Remove all built images"
+	@echo "  extract-ros1-bridge - Extract ros1_bridge tarball from builder image"
 	@echo ""
 	@echo "Environment variables:"
 	@echo "  REGISTRY            - Docker registry/image prefix (default: movai-spawner)"
@@ -76,6 +80,10 @@ build-humble-python38:
 	@echo "Building MOV.AI Spawner Base Humble with Python 3.8..."
 	docker build $(BUILD_OPTIONS) -t $(HUMBLE_PYTHON38_TAG) --target spawner --build-arg BASE_IMAGE="ce/movai-base-humble-python38" -f docker/humble/Dockerfile .
 
+build-ros1-bridge-builder:
+	@echo "Building ROS1 Bridge Builder image..."
+	docker build $(BUILD_OPTIONS) -t $(ROS1_BRIDGE_BUILDER_TAG) -f docker/humble/Dockerfile --target ros1-bridge-builder .
+
 # Run targets - Start interactive containers
 run-noetic: build-noetic
 	@echo "Starting interactive noetic container..."
@@ -92,6 +100,14 @@ run-humble: build-humble
 run-humble-python38: build-humble-python38
 	@echo "Starting interactive humble-python38 container..."
 	docker run --rm -it --user movai $(HUMBLE_PYTHON38_TAG) bash
+
+# ROS1 Bridge extraction target
+extract-ros1-bridge: build-ros1-bridge-builder
+	@echo "Extracting ROS1 bridge tarball from builder image..."
+	@mkdir -p ros2_ws
+	docker run --rm $(ROS1_BRIDGE_BUILDER_TAG) > ros-humble-ros1-bridge.tgz
+	@echo "Tarball extracted to ros-humble-ros1-bridge.tgz"
+	@ls -lh ros-humble-ros1-bridge.tgz
 
 # Use container-structure-test for image verification
 CONTAINER_STRUCTURE_TEST ?= container-structure-test
