@@ -1,0 +1,5 @@
+empy==3.3.4
+opencv-python==4.12.0.88
+pyzmq==27.1.0
+aiozmq==1.0.0
+paho-mqtt==2.1.0

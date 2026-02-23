@@ -1,6 +1,8 @@
 # === spawner
 ARG DOCKER_REGISTRY="pubregistry.aws.cloud.mov.ai"
-FROM ${DOCKER_REGISTRY}/ce/movai-base-noetic:2.7.5 AS spawner
+ARG BASE_IMAGE="ce/movai-base-humble"
+ARG BASE_IMAGE_TAG="2.7.5"
+FROM ${DOCKER_REGISTRY}/${BASE_IMAGE}:${BASE_IMAGE_TAG} AS spawner
 
 # Labels
 LABEL description="MOV.AI Spawner Base Image"
@@ -27,6 +29,7 @@ ENV MOVAI_ENV="release" \
     MOVAI_MANAGER_URI=""
 
 # Add user to hardware groups
+USER root
 RUN usermod -aG dialout movai && \
     usermod -aG video movai && \
     usermod -aG audio movai && \
@@ -69,16 +72,17 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
 RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros.key && \
     curl -fsSL $APT_REPOSITORY/movai-applications/gpg | apt-key add - && \
+    curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && \
+    echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.list.d/ros-latest.list && \
     add-apt-repository "deb [arch=all] $APT_REPOSITORY/ppa-public main main" && \
+
     # Add our pip repos
     setup-pypi-env.sh INT \
     # enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
     /usr/local/bin/enable-custom-rosdep.sh PROD && \
     # Install required packages
+    apt-get install python3-pip --reinstall -y && \
     /usr/local/bin/install-packages.sh && \
-    # Make sure python3 is the only installed one
-    apt-get update > /dev/null && \
-    apt-get install -y --no-install-recommends python-is-python3 && \
     mkdir -p /opt/mov.ai/docs && \
     chown -R movai:movai /opt/mov.ai/docs && \
     # Clean apt
@@ -87,9 +91,7 @@ RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/* && \
     # Clean temp files
-    rm -rf /tmp/* && \
-    # Temporary link to tools
-    ln -s /usr/local/lib/python$PYTHON_VERSION/dist-packages/dal/tools /opt/mov.ai/app/tools
+    rm -rf /tmp/*
 
 # Run everything as mov.ai user
 USER movai
@@ -110,12 +112,17 @@ RUN printf "# yaml for non defined third party dependencies\
 
 USER movai
 
-ENV IGNITION_VERSION=fortress
+ENV IGNITION_VERSION=garden
 
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3004
 RUN curl -fsSL http://packages.osrfoundation.org/gazebo.key | sudo apt-key add - && \
     sudo add-apt-repository "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" && \
-    sudo apt-get install -y --no-install-recommends ros-noetic-movai-ros-ign=1.111.2-3 && \
+    sudo apt-get install -y --no-install-recommends \
+        ignition-garden \
+        ignition-gazebo7 \
+        ros-humble-ros-ign-gazebo \
+        ros-humble-ros-ign-bridge \
+        ros-humble-ros-ign-image && \
     sudo apt-get clean -y > /dev/null && \
     rm -rf /opt/mov.ai/user/cache/

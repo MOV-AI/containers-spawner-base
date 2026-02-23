@@ -12,6 +12,14 @@ Noetic IGN version :
 
     docker build --pull -t spawner-ign-noetic -f docker/noetic/Dockerfile --target spawner-ign .
 
+Humble version :
+
+    docker build --pull -t spawner-humble -f docker/humble/Dockerfile --target spawner .
+
+Humble IGN version :
+
+    docker build --pull -t spawner-ign-humble -f docker/humble/Dockerfile --target spawner-ign .
+
 ## Features
 
 - Initialization of different ROS workspaces :
