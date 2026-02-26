@@ -27,3 +27,12 @@ images:
     public: true
     snyk_check: true
     target: spawner
+
+  - name: ros-humble-ros1-bridge-builder
+    docker_file: docker/humble/Dockerfile
+    docker_image: qa/ros-humble-ros1-bridge-builder
+    public_image: ce/ros-humble-ros1-bridge-builder
+    platforms: linux/amd64
+    public: true
+    snyk_check: true
+    target: ros1-bridge-builder
