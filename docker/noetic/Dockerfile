@@ -71,7 +71,7 @@ RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o
     curl -fsSL $APT_REPOSITORY/movai-applications/gpg | apt-key add - && \
     add-apt-repository "deb [arch=all] $APT_REPOSITORY/ppa-public main main" && \
     # Add our pip repos
-    setup-pypi-env.sh INT \
+    setup-pypi-env.sh INT &&\
     # enable-custom-rosdep.sh - Create local registry for debian building (temporary. To be moved to ros-buildtools) and Install required packages
     /usr/local/bin/enable-custom-rosdep.sh PROD && \
     # Install required packages
@@ -91,6 +91,11 @@ RUN curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o
     # Temporary link to tools
     ln -s /usr/local/lib/python$PYTHON_VERSION/dist-packages/dal/tools /opt/mov.ai/app/tools
 
+ENV GLOBAL_ROSDEP_SOURCELIST_FILE="/etc/ros/rosdep/sources.list.d/20-default.list"
+RUN printf "# yaml for non defined third party dependencies\
+    \nyaml https://artifacts.cloud.mov.ai/repository/movai-applications/prod/third-party-translations/rosdep.yaml\n%s"\
+    "$(cat $GLOBAL_ROSDEP_SOURCELIST_FILE)" > $GLOBAL_ROSDEP_SOURCELIST_FILE
+
 # Run everything as mov.ai user
 USER movai
 
@@ -100,13 +105,6 @@ FROM spawner AS spawner-ign
 # Labels
 LABEL description="MOV.AI Spawner IGN Image"
 LABEL maintainer="devops@mov.ai"
-
-USER root
-
-ENV GLOBAL_ROSDEP_SOURCELIST_FILE="/etc/ros/rosdep/sources.list.d/20-default.list"
-RUN printf "# yaml for non defined third party dependencies\
-    \nyaml https://artifacts.cloud.mov.ai/repository/movai-applications/prod/third-party-translations/rosdep.yaml\n%s"\
-    "$(cat $GLOBAL_ROSDEP_SOURCELIST_FILE)" > $GLOBAL_ROSDEP_SOURCELIST_FILE
 
 USER movai
 
